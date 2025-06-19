@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 
 export async function middleware(req: NextRequest) {
-    console.log(">>> middleware ativo");
+    console.log(">>> MIDDLEWARE ATIVO <<<");
 
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
     const currentPath = req.nextUrl.pathname;
@@ -15,8 +15,6 @@ export async function middleware(req: NextRequest) {
         const userId = token.sub || token.id;
 
         const expectedPath = `/dashboard/${userId}`;
-
-        console.log('ESTOU DENTRO DO TOKEN')
 
         if (currentPath !== expectedPath) {
             console.log('ENTREI AQUI')
