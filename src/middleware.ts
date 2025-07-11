@@ -7,39 +7,43 @@ export async function middleware(req: NextRequest) {
     console.log(">>> MIDDLEWARE ATIVO <<<");
 
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-    const currentPath = req.nextUrl.pathname;
+    let currentPath = req.nextUrl.pathname;
+    let pathlist: string[] = ['/dashboard', '/dashboard/jobs'];
+    let expectedPath: string = ''
 
-    console.log("SESSION TOKEN:", token);
+    console.log('CURRENT >>>>>>>>>>>>', currentPath)
 
     if (token) {
         const userId = token.sub || token.id;
 
-        let expectedPath = `/dashboard/${userId}`;
+        console.log('CONTEM?:', pathlist.includes(currentPath), 'CurrentPath', currentPath)
 
-        if (currentPath.startsWith('/dashboard')) {
-            expectedPath = `/dashboard/${userId}`;
+        if (pathlist.includes(currentPath)) {
+            expectedPath = `${currentPath}/${userId}`
+
+            if (currentPath !== expectedPath) {
+                return NextResponse.redirect(new URL(expectedPath, req.url));
+            }
+
+            return NextResponse.next();
         }
 
-        if (currentPath.startsWith(`/dashboard/${userId}/jobs`)) {
-            expectedPath = `/dashboard/${userId}/jobs`;
-        }
-
-        if (currentPath !== expectedPath) {
-            console.log('ENTREI AQUI')
-            return NextResponse.redirect(new URL(expectedPath, req.url));
+        if (currentPath == '/login') {
+            console.log('entrei aqui')
+            return NextResponse.redirect(new URL('/dashboard', req.url));
         }
 
         return NextResponse.next();
     }
-
-    if (currentPath.startsWith("/dashboard")) {
-        console.log("SESSION TOKEN NULL — redirecionando para /login");
+    
+    expectedPath = '/login'
+    
+    if (currentPath !== expectedPath) {
+        console.log("entrou aqui");
         return NextResponse.redirect(new URL("/login", req.url));
     }
-
-    return NextResponse.next();
 }
 
 export const config = {
-    matcher: ["/dashboard/:path*", "/login"],
+    matcher: ["/dashboard/:path*", "/login"]
 };
