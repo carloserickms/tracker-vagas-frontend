@@ -5,8 +5,19 @@ export function GetUserInfo() {
         queryKey: ['userInfo'],
         queryFn: async () => {
             const res = await fetch("/api/userInfo");
+            console.log('RESPOSTA DO GETTOKEN', res);
             if (!res.ok) throw new Error("Usuário não autenticado");
             return res.json();
         }
     })
+}
+
+export function LogOutAccount() {
+    return useQuery({
+        queryFn: async () =>{
+            const res = await fetch("/api/logout", {
+                method: 'POST',
+            });
+        }
+    });
 }
