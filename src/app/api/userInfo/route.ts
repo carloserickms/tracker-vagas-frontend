@@ -8,9 +8,12 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
     }
 
+    console.log('USERINFO', userInfo)
+
     return NextResponse.json({
         name: userInfo.name,
         email: userInfo.email,
         image: userInfo.picture,
+        token: userInfo.token
     });
 }
