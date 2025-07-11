@@ -14,7 +14,15 @@ export async function middleware(req: NextRequest) {
     if (token) {
         const userId = token.sub || token.id;
 
-        const expectedPath = `/dashboard/${userId}`;
+        let expectedPath = `/dashboard/${userId}`;
+
+        if (currentPath.startsWith('/dashboard')) {
+            expectedPath = `/dashboard/${userId}`;
+        }
+
+        if (currentPath.startsWith(`/dashboard/${userId}/jobs`)) {
+            expectedPath = `/dashboard/${userId}/jobs`;
+        }
 
         if (currentPath !== expectedPath) {
             console.log('ENTREI AQUI')
