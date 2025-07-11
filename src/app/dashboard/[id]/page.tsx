@@ -4,8 +4,10 @@ import SearchModal from "@/components/SearchModal";
 import { Button } from "@/components/ui/button"
 import { IoFilter } from "react-icons/io5";
 import { FiPlus } from "react-icons/fi";
+import Link from 'next/link';
 
 export default function () {
+
     return (
         <div className="flex flex-col h-dvh overflow-y-hidden p-1 gap-1">
             <div className="flex justify-center h-[10%]">
@@ -21,14 +23,22 @@ export default function () {
                         </Button>
                     </div>
                     <div className="flex">
-                        <Button className="border border-black rounded-sm hover:bg-[#18cb96]" variant="outline">Adicionar
-                            <FiPlus />
-                        </Button>
+                        <Link href="/dashboard/jobs">
+                            <Button
+                                asChild
+                                className="border border-black rounded-sm hover:bg-[#18cb96]"
+                                variant="outline"
+                            >
+                                <a className="flex items-center gap-2">
+                                    Adicionar <FiPlus />
+                                </a>
+                            </Button>
+                        </Link>
                     </div>
                 </div>
 
                 <div className="p-1">
-                    <SearchModal/>
+                    <SearchModal />
                 </div>
             </div>
         </div>
