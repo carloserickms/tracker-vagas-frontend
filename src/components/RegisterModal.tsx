@@ -25,22 +25,6 @@ export default function RegisterModal() {
                 redirect: false,
             });
 
-            console.log(result)
-
-            if (result?.ok) {
-                const session = await getSession();
-                console.log('>>>>>>>>>>>>>>>>>>>>>>>>>', session)
-                if (session?.user?.id) {
-                    // router.push(`/home/${session.user.id}`);
-                } else {
-                    setError("Erro ao recuperar sessão.");
-                }
-            } else {
-                console.log(">>> to caindo aqui <<<");
-
-                router.push('/login');
-            }
-
             setLoading(false);
         };
     }
