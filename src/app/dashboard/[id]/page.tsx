@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { IoFilter } from "react-icons/io5";
 import { FiPlus } from "react-icons/fi";
 import Link from 'next/link';
+import CardModal from "@/components/CardModal";
 
 export default function () {
 
@@ -18,7 +19,7 @@ export default function () {
                 <div className="flex w-[100%] h-[7%] justify-end items-center gap-1 p-1">
                     {/* <SearchModal/> */}
                     <div className="flex">
-                        <Button className="border border-black rounded-sm hover:bg-[#18cb96]" variant="outline">Filtrar
+                        <Button className="rounded-sm bg-[#b0f3df] hover:bg-[#18cb96]" variant="outline">Filtrar
                             <IoFilter />
                         </Button>
                     </div>
@@ -26,7 +27,7 @@ export default function () {
                         <Link href="/dashboard/jobs">
                             <Button
                                 asChild
-                                className="border border-black rounded-sm hover:bg-[#18cb96]"
+                                className="rounded-sm bg-[#b0f3df] hover:bg-[#18cb96]"
                                 variant="outline"
                             >
                                 <a className="flex items-center gap-2">
@@ -39,6 +40,10 @@ export default function () {
 
                 <div className="p-1">
                     <SearchModal />
+                </div>
+
+                <div className="flex flex-col gap-1 overflow-x-auto">
+                    <CardModal/>
                 </div>
             </div>
         </div>
