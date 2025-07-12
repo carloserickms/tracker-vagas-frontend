@@ -5,7 +5,6 @@ export function GetUserInfo() {
         queryKey: ['userInfo'],
         queryFn: async () => {
             const res = await fetch("/api/userInfo");
-            console.log('RESPOSTA DO GETTOKEN', res);
             if (!res.ok) throw new Error("Usuário não autenticado");
             return res.json();
         }
@@ -14,10 +13,22 @@ export function GetUserInfo() {
 
 export function LogOutAccount() {
     return useQuery({
+        queryKey: ['logout'],
         queryFn: async () =>{
             const res = await fetch("/api/logout", {
                 method: 'POST',
             });
         }
     });
+}
+
+export function GetAllJobs() {
+    return useQuery({
+        queryKey: ['getAllJobs'],
+        queryFn: async () => {
+            const res = await fetch("/api/getAllJobs");
+            if (!res.ok) throw new Error("Usuário não autenticado");
+            return res.json();
+        }
+    })
 }
