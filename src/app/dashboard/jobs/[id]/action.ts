@@ -1,3 +1,5 @@
+import { JobPayload } from "@/types/jobTypes";
+import { NextResponse } from "next/server";
 import { useQuery } from "react-query";
 
 export function GetAllStatus() {
@@ -22,4 +24,22 @@ export function GetAllModality() {
             return res.json();
         }
     })
+}
+
+export async function CreateNewJob(payload:JobPayload) {
+    
+    const response = await fetch('/api/createNewJob',{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        mode: "cors",
+        body: JSON.stringify(payload)
+    });
+
+    const responseData = await response.json();
+
+    if (!response.ok) {
+        return NextResponse.json({message: "Erro ao comunicar"})
+    }
 }
