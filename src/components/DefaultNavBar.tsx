@@ -2,6 +2,7 @@ import { GetUserInfo } from "@/app/dashboard/[id]/action";
 import Image from "next/image";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { date } from "zod/v4";
+import Link from 'next/link';
 
 
 export default function DefaultNavBar() {
@@ -15,13 +16,15 @@ export default function DefaultNavBar() {
         <div className="flex w-full h-full border border-black rounded-md px-2">
             <div className="flex justify-between w-full">
                 <div className="flex items-center">
-                    <Image
-                        src="/icons/tracker-vagas-logo.png"
-                        alt="Ícone de segurança"
-                        width={100}
-                        height={100}
-                        className="object-contain"
-                    />
+                    <Link href="/dashboard">
+                        <Image
+                            src="/icons/tracker-vagas-logo.png"
+                            alt="logo"
+                            width={100}
+                            height={100}
+                            className="object-contain"
+                        />
+                    </Link>
                 </div>
                 <div className="flex justify-end items-center w-[40%]">
                     <div className="flex h-[90%] w-full bg-[#18cb96] rounded-md gap-2 items-center md:w-auto">
