@@ -2,6 +2,9 @@
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import DefaultNavBar from "@/components/DefaultNavBar";
+import { useState } from "react";
+import { JobPayload } from "@/types/jobTypes";
+import { useRouter } from "next/navigation";
 import {
     Card,
     CardAction,
@@ -18,10 +21,48 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { GetAllModality, GetAllStatus } from "./action";
+import { CreateNewJob, GetAllModality, GetAllStatus } from "./action";
+import { JobInfoSchema } from "@/schemas/jobInfoSchema";
 
 
 export default function () {
+
+    const [title, setTitle] = useState<string>('');
+    const [link, setLink] = useState<string>('');
+    const [enterprise, setEnterprise] = useState<string>('');
+    const [statusSelect, setStatus] = useState<string>('');
+    const [modalitySelect, setmodality] = useState<string>('');
+    const [loading, setLoading] = useState(false);
+
+    let payload: JobPayload = {
+        title: title,
+        link: link,
+        enterpriseName: enterprise,
+        status: statusSelect,
+        modality: modalitySelect
+    }
+
+    async function handleSubmit() {
+
+        const validatedFields = JobInfoSchema.safeParse(payload)
+
+        if (!validatedFields.success) {
+            console.log(validatedFields.success)
+            
+            alert('Dados inseridos não são validos, verifique e tente novamente');
+            return
+        }
+
+        setLoading(true);
+        try {
+            await CreateNewJob(payload);
+            alert("Salvo Com Sucesso!");
+        } catch (error) {
+            alert("Erro ao Cadastrar.");
+        } finally {
+            setLoading(false);
+        }
+    }
 
     const {
         data: status,
@@ -37,8 +78,10 @@ export default function () {
 
 
     return (
-        <div>
-            <DefaultNavBar />
+        <div className="flex flex-col h-dvh overflow-y-hidden p-1 gap-1">
+            <div className="flex justify-center h-[10%]">
+                <DefaultNavBar />
+            </div>
 
             <Card>
                 <CardHeader>
@@ -46,21 +89,36 @@ export default function () {
                 </CardHeader>
                 <CardContent>
                     <p>Titulo</p>
-                    <Input placeholder="Frontend develop..." />
+                    <Input
+                        type="text"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        placeholder="Frontend develop..." />
+
                     <p>Link</p>
-                    <Input placeholder="http://www.minhaVaga.com" />
+                    <Input
+                        type="text"
+                        value={link}
+                        onChange={(e) => setLink(e.target.value)}
+                        placeholder="http://www.minhaVaga.com" />
+
                     <p>Empresa</p>
-                    <Input placeholder="TrackerVegas" />
+                    <Input
+                        type="text"
+                        value={enterprise}
+                        onChange={(e) => setEnterprise(e.target.value)}
+                        placeholder="TrackerVegas" />
+
                     <div>
                         <span>Status</span>
-                        <Select>
+                        <Select onValueChange={(value) => setStatus(value)}>
                             <SelectTrigger className="w-[180px]">
                                 <SelectValue placeholder="Status" />
                             </SelectTrigger>
                             <SelectContent>
                                 {
                                     status?.data?.map((statusItem: any) => (
-                                        <SelectItem key={statusItem.id} value={statusItem.name}>
+                                        <SelectItem key={statusItem.id} value={statusItem.id}>
                                             {statusItem.name}
                                         </SelectItem>
                                     ))
@@ -71,14 +129,14 @@ export default function () {
 
                     <div>
                         <span>Modalidade</span>
-                        <Select>
+                        <Select onValueChange={(value) => setmodality(value)}>
                             <SelectTrigger className="w-[180px]">
                                 <SelectValue placeholder="Modalidade" />
                             </SelectTrigger>
                             <SelectContent>
                                 {
                                     modality?.data?.map((modalityItem: any) => (
-                                        <SelectItem key={modalityItem.id} value={modalityItem.name}>
+                                        <SelectItem key={modalityItem.id} value={modalityItem.id}>
                                             {modalityItem.name}
                                         </SelectItem>
                                     ))
@@ -88,8 +146,10 @@ export default function () {
                     </div>
                 </CardContent>
                 <CardFooter>
-                    <Button type="submit" className="w-full">
-                        salvar
+                    <Button
+                    disabled={loading}
+                    onClick={handleSubmit} type="button" className="w-full">
+                        {loading ? "Salvando..." : "Salvar"}
                     </Button>
                 </CardFooter>
             </Card>
