@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
 
         const responseData = await response.json();
 
-        // console.log(responseData)
+        console.log(responseData)
 
         if (Array.isArray(responseData?.data)) {
             for (const job of responseData.data) {
@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
             }
         }
 
-        console.log(responseData)
+        // console.log(responseData)
 
         if (!response.ok) {
             throw new Error(responseData.message || 'Erro na solicitação dos registros');
