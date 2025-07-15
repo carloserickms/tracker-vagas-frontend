@@ -1,74 +1,75 @@
-import { IoIosBusiness } from "react-icons/io";
-import { FaBusinessTime } from "react-icons/fa";
-import { IoIosTime } from "react-icons/io";
-import { MdEditSquare } from "react-icons/md";
-import { MdDeleteForever } from "react-icons/md";
-import { FaExternalLinkSquareAlt } from "react-icons/fa";
-import { GetAllJobs } from "@/app/dashboard/[id]/action";
-import Link from "next/link";
+"use client"
 
+import { GoLinkExternal } from "react-icons/go";
+import { AiOutlineDelete } from "react-icons/ai";
+import { LiaEdit } from "react-icons/lia";
+import { LuBriefcaseBusiness } from "react-icons/lu";
+import { LiaBusinessTimeSolid } from "react-icons/lia";
+import { IoCalendarOutline } from "react-icons/io5";
+import Link from "next/link";
+import { useAllJobs } from "@/hooks/query/useAllJobs";
 
 export default function CardModal() {
+    const { data: jobsInfo, isLoading, isError } = useAllJobs();
 
-    const { data: jobsInfo, isLoading, isError } = GetAllJobs();
+    if (isLoading) return <p className="p-2">Carregando...</p>;
+    if (isError) return <p className="p-2 text-red-500">Erro ao carregar os dados.</p>;
 
     return (
-        <>
-            {
-                jobsInfo?.data?.map((jobItem: any) => (
-                    <div className="flex justify-between p-1 border rounded-md border-black">
-                        <div className="w-full">
-                            <div className="flex">
-                                <div className="w-[80%] border-b font-bold border-[#18cb96]">
-                                    <span>{jobItem.title}.</span>
-                                </div>
-                                <div className="flex justify-center items-center text-sm rounded-md bg-[#18cb96] w-[20%]">
-                                    <span>{jobItem.status}</span>
-                                </div>
-                            </div>
-                            <div className="flex">
-                                <div className="text-sm w-[40%]">
-                                    <div className="flex items-center gap-1">
-                                        <IoIosBusiness size={18} />
-                                        <span>{jobItem.enterpriseName}</span>
-                                    </div>
-                                    <div className="flex items-center gap-1">
-                                        <FaBusinessTime size={18} />
-                                        <span>{jobItem.modality}</span>
-                                    </div>
-                                    <div className="flex items-center gap-1">
-                                        <IoIosTime size={18} />
-                                        <span>{jobItem.createdAt}</span>
-                                    </div>
-                                </div>
+        <div className="flex flex-col h-full overflow-y-auto p-2 gap-2">
+            {jobsInfo?.data?.map((jobItem: any) => (
+                <div
+                    key={jobItem.id}
+                    className="flex flex-col p-2 border rounded-md shadow-sm"
+                >
+                    {/* Header */}
+                    <div className="flex justify-between items-center text-black px-2 py-1 rounded-t-md border-b">
+                        <div className="font-bold text-sm">{jobItem.title}</div>
+                        <span className="bg-[#18cb96] text-white text-xs px-2 py-0.5 rounded-md">
+                            {jobItem.status}
+                        </span>
+                    </div>
 
-                                <div className="flex items-end justify-end gap-1 w-[60%]">
-                                    <div className="flex items-center text-sm bg-[#b0f3df] rounded-md p-0.5 hover:bg-[#18cb96]">
-                                        <span>Editar</span>
-                                        <MdEditSquare size={15} />
-                                    </div>
-                                    <div className="flex items-center text-sm bg-[#b0f3df] rounded-md p-0.5 hover:bg-red-400">
-                                        <span>Excluir</span>
-                                        <MdDeleteForever size={16} />
-                                    </div>
-                                    <div className="flex items-center text-sm bg-[#b0f3df] rounded-md p-0.5 hover:bg-[#18cb96] gap-1">
-                                        <Link
-                                            href={jobItem.link.startsWith("http") ? jobItem.link : `https://${jobItem.link}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex items-center gap-1  underline"
-                                        >
-                                            <span className="text-blue-600">Link</span>
-                                            <FaExternalLinkSquareAlt size={14} />
-                                        </Link>
-                                    </div>
-
-                                </div>
-                            </div>
+                    {/* Informações principais */}
+                    <div className="flex flex-col gap-1 p-2 text-sm rounded-b-md">
+                        <div className="flex items-center gap-2">
+                            <LuBriefcaseBusiness size={16}/>
+                            <span>{jobItem.enterpriseName}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <LiaBusinessTimeSolid size={16}/>
+                            <span>{jobItem.modality}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <IoCalendarOutline size={16}/>
+                            <span>{jobItem.createdAt}</span>
                         </div>
                     </div>
-                ))
-            }
-        </>
+
+                    {/* Ações */}
+                    <div className="flex justify-end gap-2 mt-2">
+                        <button className="flex items-center gap-1 text-sm text-gray-600 bg-[#b0f3df] hover:bg-[#18cb96] hover:text-white px-2 py-1 rounded-md">
+                            <span>Editar</span>
+                            <LiaEdit size={16}/>
+                        </button>
+
+                        <button className="flex items-center gap-1 text-sm text-gray-600 bg-[#b0f3df] hover:bg-red-400 hover:text-white px-2 py-1 rounded-md">
+                            <span>Excluir</span>
+                            <AiOutlineDelete size={16}/>
+                        </button>
+
+                        <Link
+                            href={jobItem.link?.startsWith("http") ? jobItem.link : `https://${jobItem.link}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-1 text-sm bg-[#b0f3df] hover:bg-[#18cb96] hover:text-white px-2 py-1 rounded-md text-blue-600 underline"
+                        >
+                            <span>Link</span>
+                            <GoLinkExternal size={16}/>
+                        </Link>
+                    </div>
+                </div>
+            ))}
+        </div>
     );
 }
