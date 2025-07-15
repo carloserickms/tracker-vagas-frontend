@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import DefaultNavBar from "@/components/DefaultNavBar";
 import SearchModal from "@/components/SearchModal";
 import { Button } from "@/components/ui/button"
@@ -15,24 +15,24 @@ export default function () {
                 <DefaultNavBar />
             </div>
 
-            <div className="flex flex-col w-full h-full border rounded-md border-black p-1">
+            <div className="flex flex-col w-full h-full p-1">
                 <div className="flex w-[100%] h-[7%] justify-end items-center gap-1 p-1">
                     {/* <SearchModal/> */}
-                    <div className="flex">
-                        <Button className="rounded-sm bg-[#b0f3df] hover:bg-[#18cb96]" variant="outline">Filtrar
+                    <div className="flex text-gray-600">
+                        <Button className="rounded-sm bg-[#b0f3df] hover:bg-[#18cb96] hover:text-white" variant="outline">Filtrar
                             <IoFilter />
                         </Button>
                     </div>
-                    <div className="flex">
+                    <div className="flex text-gray-600">
                         <Link href="/dashboard/jobs">
                             <Button
                                 asChild
-                                className="rounded-sm bg-[#b0f3df] hover:bg-[#18cb96]"
+                                className="rounded-sm bg-[#b0f3df] hover:bg-[#18cb96] hover:text-white"
                                 variant="outline"
                             >
-                                <a className="flex items-center gap-2">
+                                <span className="flex items-center gap-2">
                                     Adicionar <FiPlus />
-                                </a>
+                                </span>
                             </Button>
                         </Link>
                     </div>
@@ -43,7 +43,9 @@ export default function () {
                 </div>
 
                 <div className="flex flex-col gap-1 overflow-x-auto">
-                    <CardModal/>
+                    <div className="overflow-y-auto">
+                        <CardModal />
+                    </div>
                 </div>
             </div>
         </div>
