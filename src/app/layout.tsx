@@ -1,10 +1,19 @@
-"use client"
+"use client";
+
 import "./globals.css";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { ReactNode } from "react";
 
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient(
+  {
+    defaultOptions: {
+      queries: {
+        staleTime: 1000 * 60 * 5,
+        cacheTime: 1000 * 60 * 10,
+        refetchOnWindowFocus: false,
+      },
+    },
+  });
 
 export default function RootLayout({
   children,
