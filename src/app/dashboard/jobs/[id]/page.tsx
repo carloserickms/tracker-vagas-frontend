@@ -7,7 +7,7 @@ import { CreateNewJob } from "./action";
 import { JobInfoSchema } from "@/schemas/jobInfoSchema";
 import { useAllModality } from "@/hooks/query/useAllmodality";
 import { useAllStatus } from "@/hooks/query/useAllStatus";
-import { JobFormCard } from "@/components/JobFormCard";
+import JobFormCard from "@/components/JobFormCard";
 
 
 export default function () {

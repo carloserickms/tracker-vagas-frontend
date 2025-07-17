@@ -15,9 +15,10 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import { JobFormCardProps } from "@/types/jobTypes"
 
 
-export function JobFormCard({
+export default function JobFormCard({
     cardTitle,
     title,
     setTitle,
