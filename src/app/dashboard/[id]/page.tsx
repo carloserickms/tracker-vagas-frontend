@@ -5,22 +5,174 @@ import SearchModal from "@/components/SearchModal";
 import { Button } from "@/components/ui/button"
 import { IoFilter } from "react-icons/io5";
 import { FiPlus } from "react-icons/fi";
-import Link from 'next/link';
 import CardModal from "@/components/CardModal";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { DeleteJob } from "./action";
+import { useEffect, useState } from "react";
+import { CreateNewJob, DeleteJob, UpdateJob } from "./action";
+import ShowConfirm from "@/components/ShowConfirm";
+import { useAllStatus } from "@/hooks/query/useAllStatus";
+import { useAllModality } from "@/hooks/query/useAllmodality";
+import JobFormCard from "@/components/JobFormCard";
+import { JobInfoSchema } from "@/schemas/jobInfoSchema";
+import { JobEditPayload, JobPayload } from "@/types/jobTypes";
+import { useJobById } from "@/hooks/query/useJobById";
+import { useRef } from "react";
+import { useAllJobs } from "@/hooks/query/useAllJobs";
+
 
 export default function () {
-    const router = useRouter();
 
     const [loading, setLoading] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
+    const [showFormJob, setFormJob] = useState(false);
     const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
+    const editModalRef = useRef<HTMLDivElement>(null);
+
+    const {
+        data: allJobs,
+        isLoading,
+        isError,
+        refetch: jobInfoRefetch,
+    } = useAllJobs();
+
+    const {
+        data: jobInfo,
+        isLoading: isJobLoading,
+        isError: isJobError,
+    } = useJobById(selectedJobId!);
+
+    const {
+        data: status,
+        isLoading: isStatusLoading,
+        isError: isStatusError,
+        refetch: statusRefetch
+    } = useAllStatus();
+
+    const {
+        data: modality,
+        isLoading: isModalityLoading,
+        isError: isModalityError,
+        refetch: modalityRefetch
+    } = useAllModality();
+
+    const [title, setTitle] = useState('');
+    const [link, setLink] = useState('');
+    const [enterprise, setEnterprise] = useState('');
+    const [statusSelect, setStatus] = useState('');
+    const [modalitySelect, setModality] = useState('');
+
+    useEffect(() => {
+        if (selectedJobId) {
+            if (jobInfo?.data) {
+                setTitle(jobInfo.data.title ?? '');
+                setLink(jobInfo.data.link ?? '');
+                setEnterprise(jobInfo.data.enterpriseName ?? '');
+                setStatus(jobInfo.data.status ?? '');
+                setModality(jobInfo.data.modality ?? '');
+            }
+        }
+    }, [jobInfo]);
+
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (
+                editModalRef.current &&
+                !editModalRef.current.contains(event.target as Node) &&
+                !(event.target as HTMLElement).closest("[data-radix-popper-content-wrapper]")
+            ) {
+                setFormJob(false);
+                setSelectedJobId(null);
+            }
+        }
+
+        if (showFormJob) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [showFormJob]);
+
+    if (isJobLoading || isModalityLoading || isStatusLoading) {
+        return <div>Carregando vaga...</div>;
+    }
+
+    let CreatePayload: JobPayload = {
+        title: title,
+        link: link,
+        enterpriseName: enterprise,
+        status: statusSelect,
+        modality: modalitySelect
+    }
+
+    const EditPayload: JobEditPayload = {
+        jobId: selectedJobId!,
+        title,
+        link,
+        enterpriseName: enterprise,
+        status: statusSelect,
+        modality: modalitySelect,
+    };
+
+    async function handleSubmit() {
+        setLoading(true);
+
+        try {
+            if (selectedJobId) {
+
+                const validatedFields = JobInfoSchema.safeParse(EditPayload);
+
+                if (!validatedFields.success) {
+                    alert("Preencha os campos corretamente.");
+                    return;
+                }
+
+                await UpdateJob(EditPayload);
+
+                await jobInfoRefetch()
+
+            } else {
+
+                const validatedFields = JobInfoSchema.safeParse(CreatePayload);
+
+                if (!validatedFields.success) {
+                    alert("Preencha os campos corretamente.");
+                    return;
+                }
+
+                await CreateNewJob(CreatePayload);
+
+                await jobInfoRefetch()
+            }
+
+            setFormJob(false);
+            setSelectedJobId(null);
+        } catch (error) {
+            alert("Erro ao salvar.");
+        } finally {
+            setLoading(false);
+        }
+    }
 
     const openConfirmDialog = (id: string) => {
         setSelectedJobId(id);
         setShowConfirm(true);
+    };
+
+    const openEditModal = (id: string) => {
+        setSelectedJobId(id);
+        setFormJob(true);
+    };
+
+    const openCreateModal = () => {
+        setSelectedJobId(null);
+        setTitle('');
+        setLink('');
+        setEnterprise('');
+        setStatus('');
+        setModality('');
+
+        setFormJob(true);
     };
 
     const cancelDelete = () => {
@@ -33,7 +185,8 @@ export default function () {
         setLoading(true);
         try {
             await DeleteJob(selectedJobId);
-            alert("Deletado com sucesso!");
+
+            await jobInfoRefetch()
         } catch {
             alert("Erro ao deletar.");
         } finally {
@@ -41,10 +194,6 @@ export default function () {
             setShowConfirm(false);
             setSelectedJobId(null);
         }
-    };
-
-    const handleEdit = (id: string) => {
-        router.push(`/dashboard/jobs/edit/${id}`);
     };
 
     return (
@@ -61,17 +210,16 @@ export default function () {
                         </Button>
                     </div>
                     <div className="flex text-gray-600">
-                        <Link href="/dashboard/jobs">
-                            <Button
-                                asChild
-                                className="rounded-sm bg-[#b0f3df] hover:bg-[#18cb96] hover:text-white"
-                                variant="outline"
-                            >
-                                <span className="flex items-center gap-2">
-                                    Adicionar <FiPlus />
-                                </span>
-                            </Button>
-                        </Link>
+                        <Button
+                            onClick={() => { openCreateModal() }}
+                            asChild
+                            className="rounded-sm bg-[#b0f3df] hover:bg-[#18cb96] hover:text-white"
+                            variant="outline"
+                        >
+                            <span className="flex items-center gap-2">
+                                Adicionar <FiPlus />
+                            </span>
+                        </Button>
                     </div>
                 </div>
 
@@ -81,33 +229,44 @@ export default function () {
 
                 <div className="flex flex-col gap-1 overflow-x-auto">
                     <CardModal
-                        handleEdit={handleEdit}
-                        deleteSubmit={confirmDelete}
+                        jobsInfo={allJobs}
+                        isLoading={isLoading}
+                        isError={isError}
+                        jobInfoRefetch={jobInfoRefetch}
                         openConfirmDialog={openConfirmDialog}
+                        openEditModal={openEditModal}
                     />
                 </div>
             </div>
 
             {showConfirm && (
-                <div className="fixed inset-0 backdrop-blur-sm bg-black/30 flex items-center justify-center z-50">
+                <ShowConfirm
+                    cancelDelete={cancelDelete}
+                    confirmDelete={confirmDelete}
+                    loading={loading}
+                />
+            )}
 
-                    <div className="bg-white p-6 rounded-md shadow-md text-center">
-                        <p className="text-lg font-semibold mb-4">Deseja realmente excluir esta vaga?</p>
-                        <div className="flex justify-center gap-4">
-                            <button
-                                onClick={cancelDelete}
-                                className="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
-                            >
-                                Cancelar
-                            </button>
-                            <button
-                                onClick={confirmDelete}
-                                disabled={loading}
-                                className="px-4 py-2 bg-red-500 text-white hover:bg-red-600 rounded"
-                            >
-                                {loading ? "Excluindo..." : "Confirmar"}
-                            </button>
-                        </div>
+            {showFormJob && (
+                <div
+                    className="fixed inset-0 backdrop-blur-sm bg-black/30 flex items-center justify-center z-50"
+                >
+                    <div className=" w-[90%]" ref={editModalRef}>
+                        <JobFormCard
+                            cardTitle={selectedJobId ? "Editar vaga" : "Criar vaga"}
+                            title={title}
+                            setTitle={setTitle}
+                            link={link}
+                            setLink={setLink}
+                            enterprise={enterprise}
+                            setEnterprise={setEnterprise}
+                            modality={modality}
+                            setModality={setModality}
+                            status={status}
+                            setStatus={setStatus}
+                            loading={loading}
+                            onSubmit={handleSubmit}
+                        />
                     </div>
                 </div>
             )}
