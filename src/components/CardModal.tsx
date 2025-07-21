@@ -15,14 +15,14 @@ export default function CardModal({
     jobsInfo,
     isLoading,
     isError,
-    jobInfoRefetch,
+    allJobsRefetch,
     openConfirmDialog,
     openEditModal
 }: CardProps & {
     jobsInfo: any;
     isLoading: boolean;
     isError: boolean;
-    jobInfoRefetch: () => void;
+    allJobsRefetch: () => void;
 }) {
 
 
