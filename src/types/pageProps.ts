@@ -11,7 +11,7 @@ export interface CardProps {
     jobsInfo: any;
     isLoading: boolean;
     isError: boolean;
-    jobInfoRefetch: () => Promise<any>;
+    allJobsRefetch: () => Promise<any>;
 }
 
 

@@ -28,11 +28,14 @@ export default function JobFormCard({
     setEnterprise,
     modality,
     setModality,
+    modalityValue,
     status,
     setStatus,
+    statusValue,
     loading,
     onSubmit,
 }: JobFormCardProps) {
+
     return (
         <Card>
             <CardHeader>
@@ -62,25 +65,25 @@ export default function JobFormCard({
 
                 <div>
                     <span>Status</span>
-                    <Select onValueChange={(value) => setStatus(value)}>
-                        <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {
-                                status?.data?.map((statusItem: any) => (
-                                    <SelectItem key={statusItem.id} value={statusItem.id}>
+                    {statusValue && (
+                        <Select value={statusValue} onValueChange={(value) => setStatus(value)}>
+                            <SelectTrigger className="w-[180px]">
+                                <SelectValue placeholder="Status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {status?.data?.map((statusItem: any) => (
+                                    <SelectItem key={statusItem.id} value={String(statusItem.id)}>
                                         {statusItem.name}
                                     </SelectItem>
-                                ))
-                            }
-                        </SelectContent>
-                    </Select>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    )}
                 </div>
 
                 <div>
                     <span>Modalidade</span>
-                    <Select onValueChange={(value) => setModality(value)}>
+                    <Select value={modalityValue} onValueChange={(value) => setModality(value)}>
                         <SelectTrigger className="w-[180px]">
                             <SelectValue placeholder="Modalidade" />
                         </SelectTrigger>

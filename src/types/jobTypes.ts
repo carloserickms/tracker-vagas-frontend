@@ -28,8 +28,10 @@ export interface JobFormCardProps {
     setEnterprise: (value: string) => void;
     modality: any;
     setModality: (value: string) => void;
+    modalityValue: string;
     status: any;
     setStatus: (value: string) => void;
+    statusValue: string;
     loading: boolean;
     onSubmit: () => void;
 }

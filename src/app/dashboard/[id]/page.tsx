@@ -31,13 +31,14 @@ export default function () {
         data: allJobs,
         isLoading,
         isError,
-        refetch: jobInfoRefetch,
+        refetch: allJobsRefetch,
     } = useAllJobs();
 
     const {
         data: jobInfo,
         isLoading: isJobLoading,
         isError: isJobError,
+        refetch: jobInfoRefetch,
     } = useJobById(selectedJobId!);
 
     const {
@@ -129,6 +130,7 @@ export default function () {
 
                 await UpdateJob(EditPayload);
 
+                await allJobsRefetch()
                 await jobInfoRefetch()
 
             } else {
@@ -142,6 +144,7 @@ export default function () {
 
                 await CreateNewJob(CreatePayload);
 
+                await allJobsRefetch()
                 await jobInfoRefetch()
             }
 
@@ -186,7 +189,7 @@ export default function () {
         try {
             await DeleteJob(selectedJobId);
 
-            await jobInfoRefetch()
+            await allJobsRefetch()
         } catch {
             alert("Erro ao deletar.");
         } finally {
@@ -232,7 +235,7 @@ export default function () {
                         jobsInfo={allJobs}
                         isLoading={isLoading}
                         isError={isError}
-                        jobInfoRefetch={jobInfoRefetch}
+                        allJobsRefetch={allJobsRefetch}
                         openConfirmDialog={openConfirmDialog}
                         openEditModal={openEditModal}
                     />
@@ -262,8 +265,10 @@ export default function () {
                             setEnterprise={setEnterprise}
                             modality={modality}
                             setModality={setModality}
+                            modalityValue={modalitySelect}
                             status={status}
                             setStatus={setStatus}
+                            statusValue={statusSelect}
                             loading={loading}
                             onSubmit={handleSubmit}
                         />
