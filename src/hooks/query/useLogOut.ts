@@ -9,6 +9,8 @@ export function useLogOut() {
             const res = await fetch("/api/logout", {
                 method: 'POST',
             });
-        }
+        },
+        staleTime: 1000 * 60 * 5,
+        cacheTime: 1000 * 60 * 10,
     });
 }
