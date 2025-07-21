@@ -64,7 +64,7 @@ export default function JobFormCard({
                     <span>Status</span>
                     <Select onValueChange={(value) => setStatus(value)}>
                         <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Status"/>
+                            <SelectValue placeholder="Status" />
                         </SelectTrigger>
                         <SelectContent>
                             {

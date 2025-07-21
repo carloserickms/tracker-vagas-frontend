@@ -33,6 +33,11 @@ export async function middleware(req: NextRequest) {
             return NextResponse.redirect(new URL('/dashboard', req.url));
         }
 
+        if (currentPath == '/') {
+            console.log('entrei aqui')
+            return NextResponse.redirect(new URL('/dashboard', req.url));
+        }
+
         return NextResponse.next();
     }
     
