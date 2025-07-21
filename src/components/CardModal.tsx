@@ -11,9 +11,20 @@ import { useAllJobs } from "@/hooks/query/useAllJobs";
 import { useRouter } from 'next/navigation';
 import { CardProps } from "@/types/pageProps";
 
-export default function CardModal({ deleteSubmit, handleEdit, openConfirmDialog }: CardProps) {
+export default function CardModal({
+    jobsInfo,
+    isLoading,
+    isError,
+    jobInfoRefetch,
+    openConfirmDialog,
+    openEditModal
+}: CardProps & {
+    jobsInfo: any;
+    isLoading: boolean;
+    isError: boolean;
+    jobInfoRefetch: () => void;
+}) {
 
-    const { data: jobsInfo, isLoading, isError } = useAllJobs();
 
     if (isLoading) return <p className="p-2">Carregando...</p>;
     if (isError) return <p className="p-2 text-red-500">Erro ao carregar os dados.</p>;
@@ -51,13 +62,13 @@ export default function CardModal({ deleteSubmit, handleEdit, openConfirmDialog 
                     </div>
 
                     {/* Ações */}
-                    <div  className="flex justify-end gap-2 mt-2">
-                        <button onClick={() => handleEdit(jobItem.id)} className="flex items-center gap-1 text-sm text-gray-600 bg-[#b0f3df] hover:bg-[#18cb96] hover:text-white px-2 py-1 rounded-md">
+                    <div className="flex justify-end gap-2 mt-2">
+                        <button onClick={async () => { openEditModal(jobItem.id)}} className="flex items-center gap-1 text-sm text-gray-600 bg-[#b0f3df] hover:bg-[#18cb96] hover:text-white px-2 py-1 rounded-md">
                             <span>Editar</span>
                             <LiaEdit size={16} />
                         </button>
 
-                        <button onClick={() => openConfirmDialog(jobItem.id)} className="flex items-center gap-1 text-sm text-gray-600 bg-[#b0f3df] hover:bg-red-400 hover:text-white px-2 py-1 rounded-md">
+                        <button onClick={async () => { openConfirmDialog(jobItem.id)}} className="flex items-center gap-1 text-sm text-gray-600 bg-[#b0f3df] hover:bg-red-400 hover:text-white px-2 py-1 rounded-md">
                             <span>Excluir</span>
                             <AiOutlineDelete size={16} />
                         </button>
