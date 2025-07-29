@@ -65,7 +65,7 @@ export default function JobFormCard({
 
                 <div>
                     <span>Status</span>
-                    {statusValue && (
+                    {
                         <Select value={statusValue} onValueChange={(value) => setStatus(value)}>
                             <SelectTrigger className="w-[180px]">
                                 <SelectValue placeholder="Status" />
@@ -78,7 +78,7 @@ export default function JobFormCard({
                                 ))}
                             </SelectContent>
                         </Select>
-                    )}
+                    }
                 </div>
 
                 <div>
