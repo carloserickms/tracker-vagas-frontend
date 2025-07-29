@@ -17,6 +17,8 @@ import { JobEditPayload, JobPayload } from "@/types/jobTypes";
 import { useJobById } from "@/hooks/query/useJobById";
 import { useRef } from "react";
 import { useAllJobs } from "@/hooks/query/useAllJobs";
+import { useFilterByTitle } from "@/hooks/query/useFilterByTitle";
+import { useDebounce } from "@/hooks/query/useDebounce";
 
 
 export default function () {
@@ -24,6 +26,9 @@ export default function () {
     const [loading, setLoading] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
     const [showFormJob, setFormJob] = useState(false);
+    const [search, setSearch] = useState('');
+    const debouncedSearch = useDebounce(search, 500);
+    const isSearching = debouncedSearch.trim() !== '';
     const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
     const editModalRef = useRef<HTMLDivElement>(null);
 
@@ -33,6 +38,13 @@ export default function () {
         isError,
         refetch: allJobsRefetch,
     } = useAllJobs();
+
+    const {
+        data: filterByTitle,
+        isLoading: isFilterByTitleLoading,
+        isError: isFilterByTitleError,
+        refetch: filterByTitleRefetch
+    } = useFilterByTitle(search);
 
     const {
         data: jobInfo,
@@ -227,14 +239,20 @@ export default function () {
                 </div>
 
                 <div className="p-1">
-                    <SearchModal />
+                    <SearchModal
+                        search={search}
+                        setSearch={setSearch}
+                        onDebouncedSearch={() => { }}
+                    />
+
                 </div>
 
                 <div className="flex flex-col gap-1 overflow-x-auto">
                     <CardModal
-                        jobsInfo={allJobs}
-                        isLoading={isLoading}
-                        isError={isError}
+                        jobsInfo={isSearching ? filterByTitle : allJobs}
+                        isLoading={isSearching ? isFilterByTitleLoading : isLoading}
+                        isError={isSearching ? isFilterByTitleError : isError}
+
                         allJobsRefetch={allJobsRefetch}
                         openConfirmDialog={openConfirmDialog}
                         openEditModal={openEditModal}

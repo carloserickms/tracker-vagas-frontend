@@ -14,9 +14,14 @@ export interface CardProps {
     allJobsRefetch: () => Promise<any>;
 }
 
-
 export interface ShowConfirmProps {
     cancelDelete: () => void;
     confirmDelete: () => void;
     loading: boolean;
+}
+
+export interface SearchModalProps {
+    search: string;
+    setSearch: (value: string) => void;
+    onDebouncedSearch: (value: string) => void;
 }

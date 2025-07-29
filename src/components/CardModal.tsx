@@ -25,6 +25,7 @@ export default function CardModal({
     allJobsRefetch: () => void;
 }) {
 
+    console.log(jobsInfo)
 
     if (isLoading) return <p className="p-2">Carregando...</p>;
     if (isError) return <p className="p-2 text-red-500">Erro ao carregar os dados.</p>;
