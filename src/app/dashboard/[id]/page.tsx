@@ -86,6 +86,13 @@ export default function Page() {
     }, [jobInfo]);
 
     useEffect(() => {
+
+    if (debouncedSearch.trim() !== '') {
+        // console.log("Pesquisa debounced acionada com:", debouncedSearch);
+    }
+}, [debouncedSearch]);
+
+    useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
             if (
                 editModalRef.current &&
@@ -242,7 +249,6 @@ export default function Page() {
                     <SearchModal
                         search={search}
                         setSearch={setSearch}
-                        onDebouncedSearch={() => { }}
                     />
 
                 </div>

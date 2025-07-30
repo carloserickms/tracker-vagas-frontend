@@ -29,5 +29,4 @@ export interface JobFormCardProps {
 export interface SearchModalProps {
     search: string;
     setSearch: (value: string) => void;
-    onDebouncedSearch: () => void;
 }

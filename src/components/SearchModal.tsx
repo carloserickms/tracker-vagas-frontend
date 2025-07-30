@@ -7,7 +7,6 @@ import { BiSearch } from "react-icons/bi";
 export default function SearchModal({
     search,
     setSearch,
-    // onDebouncedSearch,
 }: SearchModalProps) {
     return (
         <div className="flex items-center border shadow-sm rounded-sm w-full">
