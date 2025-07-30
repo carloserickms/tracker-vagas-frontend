@@ -7,8 +7,8 @@ export async function middleware(req: NextRequest) {
     console.log(">>> MIDDLEWARE ATIVO <<<");
 
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-    let currentPath = req.nextUrl.pathname;
-    let pathlist: string[] = ['/dashboard', '/dashboard/jobs'];
+    const currentPath = req.nextUrl.pathname;
+    const pathlist: string[] = ['/dashboard', '/dashboard/jobs'];
     let expectedPath: string = ''
 
     console.log('CURRENT >>>>>>>>>>>>', currentPath)

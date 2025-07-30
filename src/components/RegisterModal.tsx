@@ -2,31 +2,30 @@
 
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { getSession, signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { Provider, useState } from "react";
+import { signIn } from "next-auth/react";
+import { useState } from "react";
 
 
 export default function RegisterModal() {
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const router = useRouter();
+    // const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent, providers: string) => {
         e.preventDefault();
         setLoading(true);
         setError(null);
 
-        let result;
-
         if (providers === "google") {
-            result = await signIn("google", {
+            await signIn("google", {
                 redirect: false,
             });
-
+            
             setLoading(false);
-        };
+        } else {
+            alert(error)
+        }
     }
 
     return (

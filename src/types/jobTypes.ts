@@ -5,6 +5,7 @@ export interface JobPayload {
     status: string;
     modality: string;
 }
+
 export interface JobEditPayload {
     jobId: string;
     title: string;
@@ -14,24 +15,29 @@ export interface JobEditPayload {
     modality: string;
 }
 
-export interface JobByid {
-    id: String
+export interface JobItens {
+    id: string;
+    title: string;
+    link: string;
+    enterpriseName: string;
+    status: string;
+    modality: string;
+    createdAt: string;
 }
 
-export interface JobFormCardProps {
-    cardTitle: string;
-    title: string;
-    setTitle: (value: string) => void;
-    link: string;
-    setLink: (value: string) => void;
-    enterprise: string;
-    setEnterprise: (value: string) => void;
-    modality: any;
-    setModality: (value: string) => void;
-    modalityValue: string;
-    status: any;
-    setStatus: (value: string) => void;
-    statusValue: string;
-    loading: boolean;
-    onSubmit: () => void;
+export interface JobsInfo {
+    data: JobItens[];
+}
+
+export interface JobByid {
+    id: string;
+}
+
+export interface SelectOption {
+    id: string;
+    name: string;
+}
+
+export interface SelectOptionsData {
+    data: SelectOption[];
 }

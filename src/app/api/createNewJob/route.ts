@@ -28,6 +28,6 @@ export async function POST(req: NextRequest) {
         return NextResponse.json(responseData);
 
     } catch (error) {
-        return NextResponse.json({message: "Internal error"})
+        return NextResponse.json({message: `Internal error: ${error}`})
     }
 }

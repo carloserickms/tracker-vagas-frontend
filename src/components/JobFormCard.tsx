@@ -15,7 +15,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { JobFormCardProps } from "@/types/jobTypes"
+import { SelectOption } from "@/types/jobTypes"
+import { JobFormCardProps } from "@/types/pageProps"
 
 
 export default function JobFormCard({
@@ -71,7 +72,7 @@ export default function JobFormCard({
                                 <SelectValue placeholder="Status" />
                             </SelectTrigger>
                             <SelectContent>
-                                {status?.data?.map((statusItem: any) => (
+                                {status?.data?.map((statusItem: SelectOption) => (
                                     <SelectItem key={statusItem.id} value={String(statusItem.id)}>
                                         {statusItem.name}
                                     </SelectItem>
@@ -89,7 +90,7 @@ export default function JobFormCard({
                         </SelectTrigger>
                         <SelectContent>
                             {
-                                modality?.data?.map((modalityItem: any) => (
+                                modality?.data?.map((modalityItem: SelectOption) => (
                                     <SelectItem key={modalityItem.id} value={modalityItem.id}>
                                         {modalityItem.name}
                                     </SelectItem>

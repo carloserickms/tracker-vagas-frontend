@@ -1,27 +1,27 @@
-
-
-export interface Props {
-    id: string;
-}
+import { JobsInfo, SelectOptionsData } from "@/types/jobTypes";
 
 export interface CardProps {
     openConfirmDialog: (id: string) => void;
     openEditModal: (id: string) => void;
-
-    jobsInfo: any;
+    jobsInfo: JobsInfo | undefined;
     isLoading: boolean;
     isError: boolean;
-    allJobsRefetch: () => Promise<any>;
 }
 
-export interface ShowConfirmProps {
-    cancelDelete: () => void;
-    confirmDelete: () => void;
+export interface JobFormCardProps {
+    cardTitle: string;
+    title: string;
+    setTitle: (value: string) => void;
+    link: string;
+    setLink: (value: string) => void;
+    enterprise: string;
+    setEnterprise: (value: string) => void;
+    modality: SelectOptionsData | undefined;
+    setModality: (value: string) => void;
+    modalityValue: string;
+    status: SelectOptionsData | undefined;
+    setStatus: (value: string) => void;
+    statusValue: string;
     loading: boolean;
-}
-
-export interface SearchModalProps {
-    search: string;
-    setSearch: (value: string) => void;
-    onDebouncedSearch: (value: string) => void;
+    onSubmit: () => void;
 }

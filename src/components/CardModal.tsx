@@ -7,22 +7,19 @@ import { LuBriefcaseBusiness } from "react-icons/lu";
 import { LiaBusinessTimeSolid } from "react-icons/lia";
 import { IoCalendarOutline } from "react-icons/io5";
 import Link from "next/link";
-import { useAllJobs } from "@/hooks/query/useAllJobs";
-import { useRouter } from 'next/navigation';
 import { CardProps } from "@/types/pageProps";
+import { JobItens } from "@/types/jobTypes";
 
 export default function CardModal({
     jobsInfo,
     isLoading,
     isError,
-    allJobsRefetch,
     openConfirmDialog,
     openEditModal
 }: CardProps & {
-    jobsInfo: any;
+    jobsInfo: JobItens[];
     isLoading: boolean;
     isError: boolean;
-    allJobsRefetch: () => void;
 }) {
 
     console.log(jobsInfo)
@@ -33,7 +30,7 @@ export default function CardModal({
 
     return (
         <div className="flex flex-col h-full overflow-y-auto p-2 gap-2">
-            {jobsInfo?.data?.map((jobItem: any) => (
+            {jobsInfo?.data?.map((jobItem: JobItens) => (
                 <div
                     key={jobItem.id}
                     className="flex flex-col p-2 border rounded-md shadow-sm"

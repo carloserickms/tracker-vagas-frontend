@@ -1,4 +1,4 @@
-export default function() {
+export default function LeadPage() {
     return (
         <div className="flex-col h-dvh overflow-y-hidden">
             <p>teste</p>

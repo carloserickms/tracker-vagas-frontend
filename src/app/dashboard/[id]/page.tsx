@@ -21,7 +21,7 @@ import { useFilterByTitle } from "@/hooks/query/useFilterByTitle";
 import { useDebounce } from "@/hooks/query/useDebounce";
 
 
-export default function () {
+export default function Page() {
 
     const [loading, setLoading] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
@@ -43,28 +43,28 @@ export default function () {
         data: filterByTitle,
         isLoading: isFilterByTitleLoading,
         isError: isFilterByTitleError,
-        refetch: filterByTitleRefetch
+        // refetch: filterByTitleRefetch
     } = useFilterByTitle(search);
 
     const {
         data: jobInfo,
         isLoading: isJobLoading,
-        isError: isJobError,
+        // isError: isJobError,
         refetch: jobInfoRefetch,
     } = useJobById(selectedJobId!);
 
     const {
         data: status,
         isLoading: isStatusLoading,
-        isError: isStatusError,
-        refetch: statusRefetch
+        // isError: isStatusError,
+        // refetch: statusRefetch
     } = useAllStatus();
 
     const {
         data: modality,
         isLoading: isModalityLoading,
-        isError: isModalityError,
-        refetch: modalityRefetch
+        // isError: isModalityError,
+        // refetch: modalityRefetch
     } = useAllModality();
 
     const [title, setTitle] = useState('');
@@ -110,7 +110,7 @@ export default function () {
         return <div>Carregando vaga...</div>;
     }
 
-    let CreatePayload: JobPayload = {
+    const CreatePayload: JobPayload = {
         title: title,
         link: link,
         enterpriseName: enterprise,
@@ -163,7 +163,7 @@ export default function () {
             setFormJob(false);
             setSelectedJobId(null);
         } catch (error) {
-            alert("Erro ao salvar.");
+            alert(`Erro ao salvar.${error}`);
         } finally {
             setLoading(false);
         }
@@ -253,7 +253,6 @@ export default function () {
                         isLoading={isSearching ? isFilterByTitleLoading : isLoading}
                         isError={isSearching ? isFilterByTitleError : isError}
 
-                        allJobsRefetch={allJobsRefetch}
                         openConfirmDialog={openConfirmDialog}
                         openEditModal={openEditModal}
                     />

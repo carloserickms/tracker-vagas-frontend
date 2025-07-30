@@ -1,7 +1,7 @@
 
 import GoogleProvider from "next-auth/providers/google";
 import { RegisterGooglePayload } from "@/types/authTypes";
-import NextAuth, { NextAuthOptions } from "next-auth";
+import NextAuth, { Account, NextAuthOptions, User } from "next-auth";
 
 const prefix = process.env.NEXT_BACKEND_API_URL;
 const defaltSecretKey = process.env.SECRET_KEY || '';
@@ -19,14 +19,14 @@ const nextAuthOptions : NextAuthOptions = {
     },
 
     callbacks: {
-        async signIn({ profile, account, user }: any) {
-            if (account.provider === "google") {
+        async signIn({ account, user }: { account: Account | null; user: User }) {
+            if (account!.provider === "google") {
 
                 const payload: RegisterGooglePayload = {
-                    userName: user.name,
+                    userName: user.name ?? '',
                     email: user.email,
                     providerId: user.id,
-                    provider: account.provider,
+                    provider: account!.provider,
                     password: defaltSecretKey,
                     rePassword: defaltSecretKey
                 };
@@ -69,7 +69,7 @@ const nextAuthOptions : NextAuthOptions = {
         async jwt({ token, user }) {
             if (user) {
                 token.id = user.id;
-                token.userName = user.name;
+                token.userName = user.name ?? '';
                 token.email = user.email;
                 token.token = user.token;
             }
