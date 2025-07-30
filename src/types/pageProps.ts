@@ -30,3 +30,9 @@ export interface SearchModalProps {
     search: string;
     setSearch: (value: string) => void;
 }
+
+export interface ShowConfirmProps {
+    cancelDelete: () => void;
+    confirmDelete: () => Promise<void>;
+    loading: boolean;
+}
