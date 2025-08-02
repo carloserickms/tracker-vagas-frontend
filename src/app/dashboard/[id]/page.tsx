@@ -19,7 +19,7 @@ import { useRef } from "react";
 import { useAllJobs } from "@/hooks/query/useAllJobs";
 import { useFilterByTitle } from "@/hooks/query/useFilterByTitle";
 import { useDebounce } from "@/hooks/query/useDebounce";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import React from "react";
 import Footer from "@/components/Footer";
 
@@ -51,21 +51,21 @@ export default function Page() {
 
     const {
         data: jobInfo,
-        isLoading: isJobLoading,
+        // isLoading: isJobLoading,
         // isError: isJobError,
         refetch: jobInfoRefetch,
     } = useJobById(selectedJobId!);
 
     const {
         data: status,
-        isLoading: isStatusLoading,
+        // isLoading: isStatusLoading,
         // isError: isStatusError,
         // refetch: statusRefetch
     } = useAllStatus();
 
     const {
         data: modality,
-        isLoading: isModalityLoading,
+        // isLoading: isModalityLoading,
         // isError: isModalityError,
         // refetch: modalityRefetch
     } = useAllModality();
@@ -185,7 +185,7 @@ export default function Page() {
             setFormJob(false);
             setSelectedJobId(null);
         } catch (error) {
-            showlert(false, "Ocorreu um error ao salvar.");
+            showlert(false, `Ocorreu um error ao salvar: ${error}`);
         } finally {
             setLoading(false);
         }
