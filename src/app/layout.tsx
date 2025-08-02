@@ -2,6 +2,9 @@
 
 import "./globals.css";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 
 
 const queryClient = new QueryClient(
@@ -24,6 +27,7 @@ export default function RootLayout({
       <body className="">
         <QueryClientProvider client={queryClient}>
           {children}
+          <ToastContainer position="top-center" autoClose={3000} />
         </QueryClientProvider>
       </body>
     </html>
