@@ -20,7 +20,7 @@ export async function DeleteJob(id: string) {
         return NextResponse.json({ message: "Salvo com sucesso!" });
 
     } catch (error) {
-        return NextResponse.json({ message: "Erro interno!" });
+        return NextResponse.json({ message: "Erro interno!", error });
     }
 }
 
@@ -43,7 +43,7 @@ export async function CreateNewJob(payload: JobPayload) {
         return NextResponse.json({ message: "Salvo com sucesso!" });
 
     } catch (error) {
-        return NextResponse.json({ message: "Erro interno!" });
+        return NextResponse.json({ message: "Erro interno!", error });
     }
 }
 
@@ -66,6 +66,6 @@ export async function UpdateJob(payload: JobPayload) {
         return NextResponse.json({ message: "Salvo com sucesso!" });
 
     } catch (error) {
-        return NextResponse.json({ message: "Erro interno!" });
+        return NextResponse.json({ message: "Erro interno!", error });
     }
 }

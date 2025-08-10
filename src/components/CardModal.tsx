@@ -11,16 +11,6 @@ import { CardProps } from "@/types/pageProps";
 import { JobItens } from "@/types/jobTypes";
 import { Skeleton } from "./ui/skeleton";
 
-import {
-    Pagination,
-    PaginationContent,
-    PaginationEllipsis,
-    PaginationItem,
-    PaginationLink,
-    PaginationNext,
-    PaginationPrevious,
-} from "@/components/ui/pagination"
-
 export default function CardModal({
     jobsInfo,
     isLoading,
