@@ -11,6 +11,16 @@ import { CardProps } from "@/types/pageProps";
 import { JobItens } from "@/types/jobTypes";
 import { Skeleton } from "./ui/skeleton";
 
+import {
+    Pagination,
+    PaginationContent,
+    PaginationEllipsis,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+} from "@/components/ui/pagination"
+
 export default function CardModal({
     jobsInfo,
     isLoading,
@@ -23,11 +33,9 @@ export default function CardModal({
     isError: boolean;
 }) {
 
-    console.log(jobsInfo)
-
     if (isLoading) {
         return (
-            <div className="flex flex-col gap-4 p-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 overflow-y-auto max-h-[calc(100vh-200px)] p-2">
                 {Array.from({ length: 4 }).map((_, i) => (
                     <div key={i} className="border rounded-md shadow-sm p-4 space-y-3">
                         <div className="flex justify-between items-center">
@@ -64,7 +72,8 @@ export default function CardModal({
 
 
     return (
-        <div className="flex flex-col h-full overflow-y-auto p-2 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 overflow-y-auto max-h-[calc(100vh-200px)] p-2">
+
             {jobsInfo?.data?.map((jobItem: JobItens) => (
                 <div
                     key={jobItem.id}
@@ -114,6 +123,7 @@ export default function CardModal({
                         </Link>
                     </div>
                 </div>
+
             ))}
         </div>
     );
