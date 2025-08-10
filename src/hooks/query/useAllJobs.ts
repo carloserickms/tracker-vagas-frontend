@@ -2,11 +2,14 @@
 
 import { useQuery } from "react-query";
 
-export function useAllJobs() {
+export function useAllJobs(page:Number) {
     return useQuery({
-        queryKey: ['AllJobs'],
+        queryKey: ['AllJobs', page],
         queryFn: async () => {
-            const res = await fetch("/api/getAllJobs");
+            if(page === null){
+                page = 1
+            }
+            const res = await fetch(`/api/getAllJobs?page=${page}`);
             if (!res.ok) throw new Error("Usuário não autenticado");
             return res.json();
         },

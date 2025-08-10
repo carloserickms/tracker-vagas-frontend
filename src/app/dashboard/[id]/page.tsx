@@ -22,6 +22,15 @@ import { useDebounce } from "@/hooks/query/useDebounce";
 import { toast } from 'react-toastify';
 import React from "react";
 import Footer from "@/components/Footer";
+import {
+    Pagination,
+    PaginationContent,
+    PaginationEllipsis,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+} from "@/components/ui/pagination"
 
 
 export default function Page() {
@@ -34,13 +43,14 @@ export default function Page() {
     const isSearching = debouncedSearch.trim() !== '';
     const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
     const editModalRef = useRef<HTMLDivElement>(null);
+    const [current_page, set_page] = useState(1);
 
     const {
         data: allJobs,
         isLoading,
         isError,
         refetch: allJobsRefetch,
-    } = useAllJobs();
+    } = useAllJobs(current_page);
 
     const {
         data: filterByTitle,
@@ -238,7 +248,7 @@ export default function Page() {
     return (
         <div className="flex flex-col">
             <div className="flex w-full justify-center">
-                <div className="flex flex-col h-dvh overflow-y-hidden p-1 gap-1 w-[100%] md:w-[70%]">
+                <div className="flex flex-col h-dvh overflow-y-hidden p-1 gap-1 w-[100%] lg:w-[70%]">
                     <div className="flex justify-center h-[10%]">
                         <DefaultNavBar />
                     </div>
@@ -272,7 +282,7 @@ export default function Page() {
 
                         </div>
 
-                        <div className="flex flex-col gap-1 overflow-y-auto max-h-[calc(100vh-200px)]">
+                        <div className="flex flex-col gap-1 flex-1 overflow-y-auto">
 
                             <CardModal
                                 jobsInfo={isSearching ? filterByTitle : allJobs}
@@ -282,6 +292,25 @@ export default function Page() {
                                 openConfirmDialog={openConfirmDialog}
                                 openEditModal={openEditModal}
                             />
+
+                        </div>
+
+                        <div className="sticky bottom-0 bg-white p-2 flex justify-end shadow-md">
+                            <Pagination>
+                                <PaginationContent>
+                                    <PaginationItem>
+                                        <PaginationPrevious onClick={() => set_page(prev => Math.max(prev - 1, 1))} />
+                                    </PaginationItem>
+
+                                    <PaginationItem>
+                                        <PaginationLink>{current_page}</PaginationLink>
+                                    </PaginationItem>
+
+                                    <PaginationItem>
+                                        <PaginationNext onClick={() => set_page(prev => prev + 1)} />
+                                    </PaginationItem>
+                                </PaginationContent>
+                            </Pagination>
                         </div>
                     </div>
 

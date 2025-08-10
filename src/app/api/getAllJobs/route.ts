@@ -7,7 +7,10 @@ export async function GET(req: NextRequest) {
     try {
         const userInfo = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
-        const response = await fetch(`${prefix}/get-all-jobs`, {
+        const { searchParams } = new URL(req.url)
+        const page = searchParams.get("page")
+
+        const response = await fetch(`${prefix}/get-all-jobs?page=${page}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
