@@ -25,7 +25,6 @@ import Footer from "@/components/Footer";
 import {
     Pagination,
     PaginationContent,
-    PaginationEllipsis,
     PaginationItem,
     PaginationLink,
     PaginationNext,

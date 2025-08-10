@@ -2,7 +2,7 @@
 
 import { useQuery } from "react-query";
 
-export function useAllJobs(page:Number) {
+export function useAllJobs(page:number) {
     return useQuery({
         queryKey: ['AllJobs', page],
         queryFn: async () => {
