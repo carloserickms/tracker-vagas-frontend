@@ -36,3 +36,7 @@ export interface ShowConfirmProps {
     confirmDelete: () => Promise<void>;
     loading: boolean;
 }
+
+export interface NavbarProps {
+    onSubmit: () => void
+}

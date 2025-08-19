@@ -7,7 +7,7 @@ import { IoFilter } from "react-icons/io5";
 import { FiPlus } from "react-icons/fi";
 import CardModal from "@/components/CardModal";
 import { useEffect, useState } from "react";
-import { CreateNewJob, DeleteJob, UpdateJob } from "./action";
+import { CreateNewJob, DeleteJob, UpdateJob, Logout } from "./action";
 import ShowConfirm from "@/components/ShowConfirm";
 import { useAllStatus } from "@/hooks/query/useAllStatus";
 import { useAllModality } from "@/hooks/query/useAllmodality";
@@ -22,6 +22,7 @@ import { useDebounce } from "@/hooks/query/useDebounce";
 import { toast } from 'react-toastify';
 import React from "react";
 import Footer from "@/components/Footer";
+import { signOut } from "next-auth/react";
 import {
     Pagination,
     PaginationContent,
@@ -30,6 +31,7 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination"
+import { redirect } from "next/navigation";
 
 
 export default function Page() {
@@ -200,6 +202,21 @@ export default function Page() {
         }
     }
 
+    async function hendleLogOut() {
+        
+        var res = await Logout()
+
+        if (!res.ok) {
+            showlert(false, 'Erro ao deslogar');
+        }
+
+        showlert(true, 'Deslogando...');
+
+        await signOut();
+
+        redirect('/login')
+    }
+
     const openConfirmDialog = (id: string) => {
         setSelectedJobId(id);
         setShowConfirm(true);
@@ -249,13 +266,15 @@ export default function Page() {
             <div className="flex w-full justify-center">
                 <div className="flex flex-col h-dvh overflow-y-hidden p-1 gap-1 w-[100%] lg:w-[70%]">
                     <div className="flex justify-center h-[10%]">
-                        <DefaultNavBar />
+                        <DefaultNavBar 
+                            onSubmit={hendleLogOut}
+                        />
                     </div>
 
-                    <div className="flex flex-col w-full h-full p-1">
+                    <div className="flex flex-col w-full h-full">
                         <div className="flex w-full h-[7%] justify-end items-center text-black gap-1 p-1">
                             <div className="flex">
-                                <Button className="rounded-sm bg-[#b0f3df] hover:bg-[#18cb96] hover:text-white" variant="outline">
+                                <Button className="shadow-md hover:bg-[#18cb96] hover:text-white" variant="outline">
                                     Filtrar <IoFilter />
                                 </Button>
                             </div>
@@ -263,7 +282,7 @@ export default function Page() {
                                 <Button
                                     onClick={() => { openCreateModal() }}
                                     asChild
-                                    className="rounded-sm bg-[#b0f3df] hover:bg-[#18cb96] hover:text-white"
+                                    className="shadow-md hover:bg-[#18cb96] hover:text-white"
                                     variant="outline"
                                 >
                                     <span className="flex items-center gap-2">
@@ -281,7 +300,7 @@ export default function Page() {
 
                         </div>
 
-                        <div className="flex flex-col gap-1 flex-1 overflow-y-auto">
+                        <div className="flex flex-col gap-1 flex-1 p-1 overflow-y-auto">
 
                             <CardModal
                                 jobsInfo={isSearching ? filterByTitle : allJobs}
@@ -293,24 +312,24 @@ export default function Page() {
                             />
 
                         </div>
+                    </div>
 
-                        <div className="sticky bottom-0 bg-white p-2 flex justify-end shadow-md">
-                            <Pagination>
-                                <PaginationContent>
-                                    <PaginationItem>
-                                        <PaginationPrevious onClick={() => set_page(prev => Math.max(prev - 1, 1))} />
-                                    </PaginationItem>
+                    <div className="sticky bottom-0 p-2 flex justify-end shadow-md">
+                        <Pagination>
+                            <PaginationContent>
+                                <PaginationItem className="shadow rounded-md">
+                                    <PaginationPrevious onClick={() => set_page(prev => Math.max(prev - 1, 1))} />
+                                </PaginationItem>
 
-                                    <PaginationItem>
-                                        <PaginationLink>{current_page}</PaginationLink>
-                                    </PaginationItem>
+                                <PaginationItem className="shadow rounded-md">
+                                    <PaginationLink>{current_page}</PaginationLink>
+                                </PaginationItem>
 
-                                    <PaginationItem>
-                                        <PaginationNext onClick={() => set_page(prev => prev + 1)} />
-                                    </PaginationItem>
-                                </PaginationContent>
-                            </Pagination>
-                        </div>
+                                <PaginationItem className="shadow rounded-md">
+                                    <PaginationNext onClick={() => set_page(prev => prev + 1)} />
+                                </PaginationItem>
+                            </PaginationContent>
+                        </Pagination>
                     </div>
 
                     {showConfirm && (

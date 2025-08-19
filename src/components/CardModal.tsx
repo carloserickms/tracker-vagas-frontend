@@ -26,7 +26,7 @@ export default function CardModal({
     if (isLoading) {
         return (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 overflow-y-auto max-h-[calc(100vh-200px)] p-2">
-                {Array.from({ length: 4 }).map((_, i) => (
+                {Array.from({ length: 9 }).map((_, i) => (
                     <div key={i} className="border rounded-md shadow-sm p-4 space-y-3">
                         <div className="flex justify-between items-center">
                             <Skeleton className="h-4 w-1/3" />
@@ -62,7 +62,7 @@ export default function CardModal({
 
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 overflow-y-auto max-h-[calc(100vh-200px)] p-2">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 overflow-y-auto max-h-[calc(100vh-220px)] p-2">
 
             {jobsInfo?.data?.map((jobItem: JobItens) => (
                 <div
@@ -92,12 +92,13 @@ export default function CardModal({
                     </div>
 
                     <div className="flex justify-end gap-2 mt-2 text-black">
-                        <button onClick={async () => { openEditModal(jobItem.id) }} className="flex items-center gap-1 text-sm bg-[#b0f3df] hover:bg-[#18cb96] hover:text-white px-2 py-1 rounded-sm">
+                        <button onClick={async () => { openEditModal(jobItem.id) }} className="flex items-center gap-1 text-sm shadow-md hover:bg-[#18cb96] hover:text-white px-2 py-1 rounded-sm">
                             <span>Editar</span>
                             <LiaEdit size={16} />
                         </button>
 
-                        <button onClick={async () => { openConfirmDialog(jobItem.id) }} className="flex items-center gap-1 text-sm bg-[#b0f3df] hover:bg-red-400 hover:text-white px-2 py-1 rounded-sm">
+                        <button onClick={async () => { openConfirmDialog(jobItem.id) }} className="flex items-center gap-1 text-sm
+                        shadow-md hover:bg-red-400 hover:text-white px-2 py-1 rounded-sm">
                             <span>Excluir</span>
                             <AiOutlineDelete size={16} />
                         </button>
@@ -106,7 +107,7 @@ export default function CardModal({
                             href={jobItem.link?.startsWith("http") ? jobItem.link : `https://${jobItem.link}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-1 text-sm bg-[#b0f3df] hover:bg-[#18cb96] hover:text-white px-2 py-1 rounded-sm text-blue-600 underline"
+                            className="flex items-center gap-1 text-sm shadow-md hover:bg-[#18cb96] hover:text-white px-2 py-1 rounded-sm text-blue-600 underline"
                         >
                             <span>Link</span>
                             <GoLinkExternal size={16} />
