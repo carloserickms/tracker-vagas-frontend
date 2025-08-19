@@ -204,7 +204,7 @@ export default function Page() {
 
     async function hendleLogOut() {
         
-        var res = await Logout()
+        const res = await Logout()
 
         if (!res.ok) {
             showlert(false, 'Erro ao deslogar');
