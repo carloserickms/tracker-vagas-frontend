@@ -69,3 +69,27 @@ export async function UpdateJob(payload: JobPayload) {
         return NextResponse.json({ message: "Erro interno!", error });
     }
 }
+
+export async function Logout() {
+
+    try {
+        const response = await fetch('/api/logOutAccount', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            mode: "cors",
+        });
+
+        console.log(response)
+
+        if (!response.ok) {
+            return NextResponse.json({ message: "Erro ao comunicar" });
+        }
+
+        return NextResponse.json({ message: "Salvo com sucesso!" });
+
+    } catch (error) {
+        return NextResponse.json({ message: "Erro interno!", error });
+    }
+}

@@ -3,14 +3,18 @@ import Image from "next/image";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import Link from 'next/link';
 import { useUserInfo } from "@/hooks/query/useUserInfo";
+import { NavbarProps } from "@/types/pageProps";
 
 
-export default function DefaultNavBar() {
+export default function DefaultNavBar({
+    onSubmit
+}: NavbarProps) {
 
     const { data: user, isLoading, isError } = useUserInfo();
 
     if (isLoading) return <p>Carregando...</p>;
     if (isError || !user) return <p>Erro ao carregar usuário</p>;
+
 
     return (
         <div className="flex w-full h-full border shadow-sm rounded-md px-2">
@@ -27,7 +31,7 @@ export default function DefaultNavBar() {
                     </Link>
                 </div>
                 <div className="flex justify-end items-center w-[40%]">
-                    <div className="flex h-[90%] w-full bg-[#b0f3df] hover:bg-[#18cb96] hover:text-white rounded-md gap-2 items-center md:w-auto">
+                    <div className="flex h-[90%] w-full shadow-md hover:bg-[#18cb96] hover:text-white rounded-md gap-2 items-center md:w-auto">
                         <DropdownMenu>
                             <DropdownMenuTrigger className="flex justify-center items-center w-full h-full rounded-md gap-1 p-1">
                                 {/* Avatar */}
@@ -47,7 +51,7 @@ export default function DefaultNavBar() {
                             <DropdownMenuContent>
                                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem className="flex justify-center">Log out</DropdownMenuItem>
+                                <DropdownMenuItem onClick={onSubmit} className="flex justify-center">Log out</DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
