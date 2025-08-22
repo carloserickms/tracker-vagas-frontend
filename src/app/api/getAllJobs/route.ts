@@ -1,5 +1,8 @@
+import { convertDataString } from "@/utils/convertDataString";
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
+
+
 
 const prefix = process.env.NEXT_BACKEND_API_URL;
 
@@ -21,23 +24,17 @@ export async function GET(req: NextRequest) {
 
         const responseData = await response.json();
 
-        console.log(responseData)
-
         if (Array.isArray(responseData?.data)) {
             for (const job of responseData.data) {
                 if (typeof job.createdAt === "string") {
-                    const safeDate = new Date(job.createdAt.slice(0, 19));
-                    job.createdAt = safeDate.toLocaleDateString("pt-BR");
+                    job.createdAt = convertDataString(job.createdAt);
                 }
 
                 if (typeof job.updatedAt === "string") {
-                    const safeDate = new Date(job.updatedAt.slice(0, 19));
-                    job.updatedAt = safeDate.toLocaleDateString("pt-BR");
+                    job.updatedAt = convertDataString(job.updatedAt);
                 }
             }
         }
-
-        // console.log(responseData)
 
         if (!response.ok) {
             throw new Error(responseData.message || 'Erro na solicitação dos registros');

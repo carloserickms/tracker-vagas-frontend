@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
         });
 
         const responseData = await response.json();
-        console.log('Resposta do backend Status', responseData);
+        // console.log('Resposta do backend Status', responseData);
 
         if (!response.ok) {
             throw new Error(responseData.message || 'Erro na solicitação do Status');
