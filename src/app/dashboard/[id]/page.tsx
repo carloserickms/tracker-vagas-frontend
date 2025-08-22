@@ -13,11 +13,10 @@ import { useAllStatus } from "@/hooks/query/useAllStatus";
 import { useAllModality } from "@/hooks/query/useAllmodality";
 import JobFormCard from "@/components/JobFormCard";
 import { JobInfoSchema } from "@/schemas/jobInfoSchema";
-import { JobEditPayload, JobPayload } from "@/types/jobTypes";
+import { JobEditPayload, JobItens, JobPayload, SelectOption } from "@/types/jobTypes";
 import { useJobById } from "@/hooks/query/useJobById";
 import { useRef } from "react";
 import { useAllJobs } from "@/hooks/query/useAllJobs";
-import { useFilterByTitle } from "@/hooks/query/useFilterByTitle";
 import { useDebounce } from "@/hooks/query/useDebounce";
 import { toast } from 'react-toastify';
 import React from "react";
@@ -31,6 +30,12 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+} from "@/components/ui/select"
 import { redirect } from "next/navigation";
 
 
@@ -41,10 +46,11 @@ export default function Page() {
     const [showFormJob, setFormJob] = useState(false);
     const [search, setSearch] = useState('');
     const debouncedSearch = useDebounce(search, 500);
-    const isSearching = debouncedSearch.trim() !== '';
     const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
     const editModalRef = useRef<HTMLDivElement>(null);
     const [current_page, set_page] = useState(1);
+    const [filterModality, setFilterModality] = useState('all');
+    const [currentCards, setCurrentCards] = useState<JobItens[]>([]);
 
     const {
         data: allJobs,
@@ -52,13 +58,6 @@ export default function Page() {
         isError,
         refetch: allJobsRefetch,
     } = useAllJobs(current_page);
-
-    const {
-        data: filterByTitle,
-        isLoading: isFilterByTitleLoading,
-        isError: isFilterByTitleError,
-        // refetch: filterByTitleRefetch
-    } = useFilterByTitle(search);
 
     const {
         data: jobInfo,
@@ -100,13 +99,6 @@ export default function Page() {
     }, [jobInfo]);
 
     useEffect(() => {
-
-        if (debouncedSearch.trim() !== '') {
-            // console.log("Pesquisa debounced acionada com:", debouncedSearch);
-        }
-    }, [debouncedSearch]);
-
-    useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
             if (
                 editModalRef.current &&
@@ -127,6 +119,23 @@ export default function Page() {
         };
     }, [showFormJob]);
 
+    useEffect(() => {
+        if (allJobs?.data) {
+            const filteredJobs = allJobs.data.filter((jobItem: JobItens) => {
+                const matchesSearch =
+                    debouncedSearch === '' ||
+                    jobItem.title.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+                    jobItem.enterpriseName.toLowerCase().includes(debouncedSearch.toLowerCase());
+
+                const matchesModality =
+                    filterModality === 'all' || jobItem.modality === filterModality;
+
+                return matchesSearch && matchesModality;
+            });
+
+            setCurrentCards(filteredJobs);
+        }
+    }, [debouncedSearch, filterModality, allJobs]);
 
 
     const CreatePayload: JobPayload = {
@@ -203,8 +212,8 @@ export default function Page() {
     }
 
     async function hendleLogOut() {
-        
-        var res = await Logout()
+
+        const res = await Logout()
 
         if (!res.ok) {
             showlert(false, 'Erro ao deslogar');
@@ -266,17 +275,34 @@ export default function Page() {
             <div className="flex w-full justify-center">
                 <div className="flex flex-col h-dvh overflow-y-hidden p-1 gap-1 w-[100%] lg:w-[70%]">
                     <div className="flex justify-center h-[10%]">
-                        <DefaultNavBar 
+                        <DefaultNavBar
                             onSubmit={hendleLogOut}
                         />
                     </div>
 
                     <div className="flex flex-col w-full h-full">
                         <div className="flex w-full h-[7%] justify-end items-center text-black gap-1 p-1">
-                            <div className="flex">
-                                <Button className="shadow-md hover:bg-[#18cb96] hover:text-white" variant="outline">
-                                    Filtrar <IoFilter />
-                                </Button>
+                            <div className="flex rounded-md shadow-md">
+                                <Select value={filterModality} onValueChange={(value) => setFilterModality(value)}>
+                                    <SelectTrigger className="group hover:bg-[#18cb96]">
+                                        <span className="flex items-center gap-2 font-semibold group-hover:text-white">
+                                            Filtrar <IoFilter className="group-hover:text-white" />
+                                        </span>
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {
+                                            modality?.data.map((modalityItem: SelectOption) => (
+                                                <SelectItem key={modalityItem.id} value={modalityItem.name}>
+                                                    {modalityItem.name}
+                                                </SelectItem>
+                                            ))
+                                        }
+                                        <SelectItem key={0} value="all">
+                                            Todos
+                                        </SelectItem>
+
+                                    </SelectContent>
+                                </Select>
                             </div>
                             <div className="flex">
                                 <Button
@@ -303,9 +329,9 @@ export default function Page() {
                         <div className="flex flex-col gap-1 flex-1 p-1 overflow-y-auto">
 
                             <CardModal
-                                jobsInfo={isSearching ? filterByTitle : allJobs}
-                                isLoading={isSearching ? isFilterByTitleLoading : isLoading}
-                                isError={isSearching ? isFilterByTitleError : isError}
+                                jobsInfo={currentCards}
+                                isLoading={isLoading}
+                                isError={isError}
 
                                 openConfirmDialog={openConfirmDialog}
                                 openEditModal={openEditModal}

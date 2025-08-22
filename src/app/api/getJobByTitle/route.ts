@@ -1,3 +1,4 @@
+import { convertDataString } from "@/utils/convertDataString";
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -24,7 +25,18 @@ export async function GET(req: NextRequest) {
         });
 
         const responseData = await response.json();
-        console.log('Resposta do backend Vaga>>>>>>>>>>>>>>>>>>>>:', responseData);
+
+        if (Array.isArray(responseData?.data)) {
+            for (const job of responseData.data) {
+                if (typeof job.createdAt === "string") {
+                    job.createdAt = convertDataString(job.createdAt);
+                }
+
+                if (typeof job.updatedAt === "string") {
+                    job.updatedAt = convertDataString(job.updatedAt);
+                }
+            }
+        }
 
         if (!response.ok) {
             throw new Error(responseData.message || 'Erro na solicitação da Vaga');

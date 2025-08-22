@@ -90,6 +90,6 @@ export async function Logout() {
         return NextResponse.json({ message: "Salvo com sucesso!" });
 
     } catch (error) {
-        return NextResponse.json({ message: "Erro interno!", error });
+        return NextResponse.json({ message: "Erro interno!", error },  { status: 500 });
     }
 }

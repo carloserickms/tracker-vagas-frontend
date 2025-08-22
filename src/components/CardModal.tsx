@@ -17,11 +17,7 @@ export default function CardModal({
     isError,
     openConfirmDialog,
     openEditModal
-}: CardProps & {
-    jobsInfo: JobItens[];
-    isLoading: boolean;
-    isError: boolean;
-}) {
+}: CardProps) {
 
     if (isLoading) {
         return (
@@ -60,11 +56,10 @@ export default function CardModal({
     }
     if (isError) return <p className="p-2 text-red-500">Erro ao carregar os dados.</p>;
 
-
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 overflow-y-auto max-h-[calc(100vh-220px)] p-2">
 
-            {jobsInfo?.data?.map((jobItem: JobItens) => (
+            {jobsInfo.map((jobItem: JobItens) => (
                 <div
                     key={jobItem.id}
                     className="flex flex-col p-2 border rounded-md shadow-sm"

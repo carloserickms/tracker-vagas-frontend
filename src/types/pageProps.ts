@@ -1,9 +1,9 @@
-import { JobsInfo, SelectOptionsData } from "@/types/jobTypes";
+import { JobItens, SelectOptionsData } from "@/types/jobTypes";
 
 export interface CardProps {
     openConfirmDialog: (id: string) => void;
     openEditModal: (id: string) => void;
-    jobsInfo: JobsInfo | undefined;
+    jobsInfo: JobItens[];
     isLoading: boolean;
     isError: boolean;
 }
