@@ -17,7 +17,7 @@ export default function DefaultNavBar({
 
 
     return (
-        <div className="flex w-full h-full border shadow-sm rounded-md px-2">
+        <div className="flex w-full h-full border shadow-sm rounded-md px-2 bg-white">
             <div className="flex justify-between w-full">
                 <div className="flex items-center">
                     <Link href="/dashboard">
@@ -36,7 +36,7 @@ export default function DefaultNavBar({
                             <DropdownMenuTrigger className="flex justify-center items-center w-full h-full rounded-md gap-1 p-1">
                                 {/* Avatar */}
                                 <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 p-1">
-                                    <img
+                                    <Image 
                                         src={user.image}
                                         alt={user.name || "User Image"}
                                         className="object-cover w-full h-full rounded-full"

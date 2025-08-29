@@ -9,7 +9,7 @@ export default function SearchModal({
     setSearch,
 }: SearchModalProps) {
     return (
-        <div className="flex items-center border shadow-sm rounded-sm w-full">
+        <div className="flex items-center border shadow-sm rounded-sm w-full bg-white">
             <div className="flex-1">
                 <Input
                     value={search}

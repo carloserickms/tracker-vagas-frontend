@@ -2,19 +2,13 @@
 
 import DefaultNavBar from "@/components/DefaultNavBar";
 import SearchModal from "@/components/SearchModal";
-import { Button } from "@/components/ui/button"
-import { IoFilter } from "react-icons/io5";
-import { FiPlus } from "react-icons/fi";
-import CardModal from "@/components/CardModal";
 import { useEffect, useState } from "react";
 import { CreateNewJob, DeleteJob, UpdateJob, Logout } from "./action";
 import ShowConfirm from "@/components/ShowConfirm";
 import { useAllStatus } from "@/hooks/query/useAllStatus";
 import { useAllModality } from "@/hooks/query/useAllmodality";
-import JobFormCard from "@/components/JobFormCard";
 import { JobInfoSchema } from "@/schemas/jobInfoSchema";
-import { JobEditPayload, JobItens, JobPayload, SelectOption } from "@/types/jobTypes";
-import { useJobById } from "@/hooks/query/useJobById";
+import { FormItens, JobEditPayload, JobItens, JobPayload } from "@/types/jobTypes";
 import { useRef } from "react";
 import { useAllJobs } from "@/hooks/query/useAllJobs";
 import { useDebounce } from "@/hooks/query/useDebounce";
@@ -22,6 +16,7 @@ import { toast } from 'react-toastify';
 import React from "react";
 import Footer from "@/components/Footer";
 import { signOut } from "next-auth/react";
+import Image from "next/image";
 import {
     Pagination,
     PaginationContent,
@@ -30,13 +25,13 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-} from "@/components/ui/select"
 import { redirect } from "next/navigation";
+import { useAllinterestLevels } from "@/hooks/query/useAllInterestLevels";
+import { useAllTypeOfContracts } from "@/hooks/query/useTypeOfContracts";
+import Card from "@/components/Card";
+import JobFormModal from "@/components/jobFormModal";
+import ActionBar from "@/components/ActionBar";
+import emptyState from '../../../../public/images/empty-state.png';
 
 
 export default function Page() {
@@ -60,13 +55,6 @@ export default function Page() {
     } = useAllJobs(current_page);
 
     const {
-        data: jobInfo,
-        // isLoading: isJobLoading,
-        // isError: isJobError,
-        refetch: jobInfoRefetch,
-    } = useJobById(selectedJobId!);
-
-    const {
         data: status,
         // isLoading: isStatusLoading,
         // isError: isStatusError,
@@ -80,23 +68,47 @@ export default function Page() {
         // refetch: modalityRefetch
     } = useAllModality();
 
+    const {
+        data: interestLevel,
+        // isLoading: isModalityLoading,
+        // isError: isModalityError,
+        // refetch: interestLevelRefetch
+    } = useAllinterestLevels();
+
+    const {
+        data: typeOfContract,
+        // isLoading: isModalityLoading,
+        // isError: isModalityError,
+        // refetch: modalityRefetch
+    } = useAllTypeOfContracts();
+
     const [title, setTitle] = useState('');
     const [link, setLink] = useState('');
     const [enterprise, setEnterprise] = useState('');
-    const [statusSelect, setStatus] = useState('');
-    const [modalitySelect, setModality] = useState('');
+    const [statusSelectId, setStatusSelectId] = useState('');
+    const [modalitySelectId, setModalitySelectId] = useState('');
+    const [locationSelect, setLocation] = useState('');
+    const [interestLevelSelectId, setInterestLevelSelectId] = useState('');
+    const [salarySelect, setSalary] = useState(0);
+    const [typeOfContractSelectId, setTypeOfContractSelectId] = useState('');
+    const [workloadSelect, setWorkload] = useState(0);
+    const [selectedCardData, setSelectedCardData] = useState<JobItens>();
+
 
     useEffect(() => {
-        if (selectedJobId) {
-            if (jobInfo?.data) {
-                setTitle(jobInfo.data.title ?? '');
-                setLink(jobInfo.data.link ?? '');
-                setEnterprise(jobInfo.data.enterpriseName ?? '');
-                setStatus(jobInfo.data.status ?? '');
-                setModality(jobInfo.data.modality ?? '');
-            }
+        if (selectedCardData) {
+            setTitle(selectedCardData.title)
+            setLink(selectedCardData.link)
+            setEnterprise(selectedCardData.enterpriseName)
+            setInterestLevelSelectId(selectedCardData.interestLevelId!)
+            setLocation(selectedCardData.location!)
+            setSalary(selectedCardData.salary!)
+            setTypeOfContractSelectId(selectedCardData.typeOfContractId!)
+            setWorkload(selectedCardData.workload!)
+            setStatusSelectId(selectedCardData.statusId!)
+            setModalitySelectId(selectedCardData.modalityId)
         }
-    }, [jobInfo]);
+    }, [selectedCardData])
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
@@ -137,22 +149,61 @@ export default function Page() {
         }
     }, [debouncedSearch, filterModality, allJobs]);
 
+    const SelectCardPayload: FormItens = {
+        title: title,
+        link: link,
+        enterprise: enterprise,
+        locationValue: locationSelect,
+        salaryValue: salarySelect,
+        workloadValue: workloadSelect,
+        loading: loading,
+        modalityId: modalitySelectId,
+        statusId: statusSelectId,
+        interestLevelId: interestLevelSelectId,
+        typeOfContractId: typeOfContractSelectId,
+        setIterestLevelId: setInterestLevelSelectId,
+        setModalityId: setModalitySelectId,
+        setStatusId: setStatusSelectId,
+        setTypeOfContractId: setTypeOfContractSelectId,
+        setTitle: setTitle,
+        setLink: setLink,
+        setEnterprise: setEnterprise,
+        setLocation: setLocation,
+        setSalary: setSalary,
+        setWorkload: setWorkload,
+        onSubmit: handleSubmit,
+        cardTitle: selectedJobId ? "Editar vaga" : "Criar vaga",
+        modality: modality,
+        status: status,
+        interestLevel: interestLevel,
+        typeOfContract: typeOfContract
+    }
 
     const CreatePayload: JobPayload = {
         title: title,
         link: link,
         enterpriseName: enterprise,
-        status: statusSelect,
-        modality: modalitySelect
-    }
+        status: statusSelectId,
+        modality: modalitySelectId,
+        location: locationSelect,
+        interestLevel: interestLevelSelectId,
+        salary: salarySelect,
+        typeOfContract: typeOfContractSelectId,
+        workload: workloadSelect
+    };
 
     const EditPayload: JobEditPayload = {
         jobId: selectedJobId!,
-        title,
-        link,
+        title: title,
+        link: link,
         enterpriseName: enterprise,
-        status: statusSelect,
-        modality: modalitySelect,
+        status: statusSelectId,
+        modality: modalitySelectId,
+        location: locationSelect,
+        interestLevel: interestLevelSelectId,
+        salary: salarySelect,
+        typeOfContract: typeOfContractSelectId,
+        workload: workloadSelect
     };
 
     function showlert(validated: boolean, mensage: string) {
@@ -164,6 +215,19 @@ export default function Page() {
         toast.success(mensage)
     }
 
+    function cleanFilds() {
+        setSelectedJobId(null);
+        setTitle('');
+        setLink('');
+        setEnterprise('');
+        setSalary(0.00);
+        setWorkload(0.00);
+        setLocation('');
+        setInterestLevelSelectId('')
+        setStatusSelectId('')
+        setModalitySelectId('')
+        setTypeOfContractSelectId('')
+    }
 
     async function handleSubmit() {
         setLoading(true);
@@ -183,14 +247,13 @@ export default function Page() {
                 showlert(true, 'Vaga salva com sucesso!')
 
                 await allJobsRefetch()
-                await jobInfoRefetch()
+                cleanFilds()
 
             } else {
-
                 const validatedFields = JobInfoSchema.safeParse(CreatePayload);
 
                 if (!validatedFields.success) {
-                    showlert(false, "Preencha os campos corretamente.");
+                    showlert(false, `Preencha os campos corretamente. ${validatedFields.error}`);
                     return;
                 }
 
@@ -199,7 +262,7 @@ export default function Page() {
                 showlert(true, "Vaga criada com sucesso!.");
 
                 await allJobsRefetch()
-                await jobInfoRefetch()
+                cleanFilds()
             }
 
             setFormJob(false);
@@ -217,6 +280,7 @@ export default function Page() {
 
         if (!res.ok) {
             showlert(false, 'Erro ao deslogar');
+            return
         }
 
         showlert(true, 'Deslogando...');
@@ -237,14 +301,8 @@ export default function Page() {
     };
 
     const openCreateModal = () => {
-        setSelectedJobId(null);
-        setTitle('');
-        setLink('');
-        setEnterprise('');
-        setStatus('');
-        setModality('');
-
         setFormJob(true);
+        cleanFilds()
     };
 
     const cancelDelete = () => {
@@ -281,62 +339,47 @@ export default function Page() {
                     </div>
 
                     <div className="flex flex-col w-full h-full">
-                        <div className="flex w-full h-[7%] justify-end items-center text-black gap-1 p-1">
-                            <div className="flex rounded-md shadow-md">
-                                <Select value={filterModality} onValueChange={(value) => setFilterModality(value)}>
-                                    <SelectTrigger className="group hover:bg-[#18cb96]">
-                                        <span className="flex items-center gap-2 font-semibold group-hover:text-white">
-                                            Filtrar <IoFilter className="group-hover:text-white" />
-                                        </span>
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {
-                                            modality?.data.map((modalityItem: SelectOption) => (
-                                                <SelectItem key={modalityItem.id} value={modalityItem.name}>
-                                                    {modalityItem.name}
-                                                </SelectItem>
-                                            ))
-                                        }
-                                        <SelectItem key={0} value="all">
-                                            Todos
-                                        </SelectItem>
-
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                            <div className="flex">
-                                <Button
-                                    onClick={() => { openCreateModal() }}
-                                    asChild
-                                    className="shadow-md hover:bg-[#18cb96] hover:text-white"
-                                    variant="outline"
-                                >
-                                    <span className="flex items-center gap-2">
-                                        Adicionar <FiPlus />
-                                    </span>
-                                </Button>
-                            </div>
-                        </div>
+                        <ActionBar
+                            filterModality={filterModality}
+                            modality={modality}
+                            openCreateModal={openCreateModal}
+                            setFilterModality={setFilterModality}
+                        />
 
                         <div className="p-1">
                             <SearchModal
                                 search={search}
                                 setSearch={setSearch}
                             />
-
                         </div>
 
-                        <div className="flex flex-col gap-1 flex-1 p-1 overflow-y-auto">
-
-                            <CardModal
-                                jobsInfo={currentCards}
-                                isLoading={isLoading}
-                                isError={isError}
-
-                                openConfirmDialog={openConfirmDialog}
-                                openEditModal={openEditModal}
-                            />
-
+                        <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3 lg:gap-4 overflow-y-auto max-h-[calc(100vh-200px)] pt-5 pb-5">
+                            {currentCards?.length === 0 ? (
+                                <div className="flex flex-col items-center justify-center col-span-full py-10 text-gray-500">
+                                    <Image
+                                        src={emptyState} 
+                                        alt="Nenhum item encontrado"
+                                        width={260}
+                                        height={260}
+                                        className="opacity-70 mb-4"
+                                    />
+                                    <p className="text-lg font-medium popup">Nada aqui por enquanto...</p>
+                                </div>
+                            ) : (
+                                currentCards.map((jobItem: JobItens) => (
+                                    <Card
+                                        key={jobItem.id}
+                                        jobsInfo={jobItem}
+                                        interestLevels={interestLevel}
+                                        isLoading={isLoading}
+                                        isError={isError}
+                                        setSelectedCardData={setSelectedCardData}
+                                        allJobsRefetch={allJobsRefetch}
+                                        openConfirmDialog={openConfirmDialog}
+                                        openEditModal={openEditModal}
+                                    />
+                                ))
+                            )}
                         </div>
                     </div>
 
@@ -344,7 +387,7 @@ export default function Page() {
                         <Pagination>
                             <PaginationContent>
                                 <PaginationItem className="shadow rounded-md">
-                                    <PaginationPrevious onClick={() => set_page(prev => Math.max(prev - 1, 1))} />
+                                    <PaginationPrevious className="hover:bg-[#18cb96] hover:text-white" onClick={() => set_page(prev => Math.max(prev - 1, 1))} />
                                 </PaginationItem>
 
                                 <PaginationItem className="shadow rounded-md">
@@ -352,7 +395,7 @@ export default function Page() {
                                 </PaginationItem>
 
                                 <PaginationItem className="shadow rounded-md">
-                                    <PaginationNext onClick={() => set_page(prev => prev + 1)} />
+                                    <PaginationNext className="hover:bg-[#18cb96] hover:text-white" onClick={() => set_page(prev => prev + 1)} />
                                 </PaginationItem>
                             </PaginationContent>
                         </Pagination>
@@ -371,22 +414,9 @@ export default function Page() {
                             className="fixed inset-0 backdrop-blur-sm bg-black/30 flex items-center justify-center z-50"
                         >
                             <div className=" w-[90%] md:w-[40%]" ref={editModalRef}>
-                                <JobFormCard
+                                <JobFormModal
                                     cardTitle={selectedJobId ? "Editar vaga" : "Criar vaga"}
-                                    title={title}
-                                    setTitle={setTitle}
-                                    link={link}
-                                    setLink={setLink}
-                                    enterprise={enterprise}
-                                    setEnterprise={setEnterprise}
-                                    modality={modality}
-                                    setModality={setModality}
-                                    modalityValue={modalitySelect}
-                                    status={status}
-                                    setStatus={setStatus}
-                                    statusValue={statusSelect}
-                                    loading={loading}
-                                    onSubmit={handleSubmit}
+                                    formParms={SelectCardPayload}
                                 />
                             </div>
                         </div>
