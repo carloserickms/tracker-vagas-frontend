@@ -22,10 +22,10 @@ export default function Footer() {
                 <div className="flex flex-col gap-2">
                     <h3 className="text-lg font-semibold text-white mb-2">Siga-nos</h3>
                     <div className="flex gap-4">
-                        <a href="https://github.com/carloserickms" aria-label="GitHub" className="hover:text-blue-600 transition-colors">
+                        <a href="https://github.com/carloserickms" target="_blank" aria-label="GitHub" className="hover:text-blue-600 transition-colors">
                             <FaGithub size={20} />
                         </a>
-                        <a href="https://www.linkedin.com/in/carlos-erick" aria-label="LinkedIn" className="hover:text-blue-700 transition-colors">
+                        <a href="https://www.linkedin.com/in/carlos-erick" target="_blank" aria-label="LinkedIn" className="hover:text-blue-700 transition-colors">
                             <FaLinkedinIn size={20} />
                         </a>
                     </div>

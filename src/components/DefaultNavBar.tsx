@@ -17,7 +17,7 @@ export default function DefaultNavBar({
 
 
     return (
-        <div className="flex w-full h-full border shadow-sm rounded-md px-2">
+        <div className="flex w-full h-full border shadow-sm rounded-md px-2 bg-white">
             <div className="flex justify-between w-full">
                 <div className="flex items-center">
                     <Link href="/dashboard">
