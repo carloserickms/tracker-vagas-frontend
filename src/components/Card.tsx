@@ -137,7 +137,7 @@ export default function Card({
                 </div>
 
                 <div className="flex justify-end gap-2 mt-2 text-black">
-                    <button onClick={async () => { openEditModal(jobsInfo.id), setSelectedCardData({ ...jobsInfo }) }} className="flex items-center gap-1 text-sm shadow-md hover:bg-[#18cb96] hover:text-white px-2 py-1 rounded-sm cursor-pointer">
+                    <button onClick={async () => { openEditModal(jobsInfo.id); setSelectedCardData({ ...jobsInfo }) }} className="flex items-center gap-1 text-sm shadow-md hover:bg-[#18cb96] hover:text-white px-2 py-1 rounded-sm cursor-pointer">
                         <span>Editar</span>
                         <LiaEdit size={16} />
                     </button>
