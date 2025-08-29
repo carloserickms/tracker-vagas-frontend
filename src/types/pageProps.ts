@@ -1,11 +1,26 @@
-import { JobItens, SelectOptionsData } from "@/types/jobTypes";
+import { FormItens, JobItens, SelectOptionsData } from "@/types/jobTypes";
 
 export interface CardProps {
     openConfirmDialog: (id: string) => void;
     openEditModal: (id: string) => void;
-    jobsInfo: JobItens[];
+    setSelectedCardData: (cardData: JobItens) => void;
+    allJobsRefetch: () => void;
+    jobsInfo: JobItens;
+    interestLevels: SelectOptionsData | undefined;
     isLoading: boolean;
     isError: boolean;
+}
+
+export interface JobFormProps {
+    cardTitle: string;
+    formParms: FormItens;
+}
+
+export interface ActionBarProps {
+    filterModality : string;
+    modality: SelectOptionsData | undefined;
+    setFilterModality: (value: string) => void;
+    openCreateModal: () => void;
 }
 
 export interface JobFormCardProps {
@@ -22,6 +37,18 @@ export interface JobFormCardProps {
     status: SelectOptionsData | undefined;
     setStatus: (value: string) => void;
     statusValue: string;
+    setLocation: (value: string) => void;
+    locationValue?: string | null;
+    interestLevel?: SelectOptionsData | undefined;
+    setInterestLevel: (value: string) => void;
+    interestLevelValue?: string | null;
+    setSalary: (value: number) => void;
+    salaryValue?: number | null;
+    setWorkload: (value: number) => void;
+    workloadValue?: number | null
+    typeOfContract: SelectOptionsData | undefined;
+    setTypeOfContract: (value: string) => void;
+    typeOfContractValue?: string | null
     loading: boolean;
     onSubmit: () => void;
 }
