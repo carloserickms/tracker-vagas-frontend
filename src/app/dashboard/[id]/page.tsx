@@ -185,11 +185,11 @@ export default function Page() {
         enterpriseName: enterprise,
         status: statusSelectId,
         modality: modalitySelectId,
-        location: locationSelect,
-        interestLevel: interestLevelSelectId,
-        salary: salarySelect,
-        typeOfContract: typeOfContractSelectId,
-        workload: workloadSelect
+        location: locationSelect!,
+        interestLevel: interestLevelSelectId!,
+        salary: salarySelect!,
+        typeOfContract: typeOfContractSelectId!,
+        workload: workloadSelect!
     };
 
     const EditPayload: JobEditPayload = {
@@ -257,7 +257,9 @@ export default function Page() {
                     return;
                 }
 
-                await CreateNewJob(CreatePayload);
+                const a = await CreateNewJob(CreatePayload);
+
+                console.log(a)
 
                 showlert(true, "Vaga criada com sucesso!.");
 
