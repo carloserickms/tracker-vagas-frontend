@@ -8,7 +8,7 @@ import { FcGoogle } from "react-icons/fc";
 
 export default function RegisterModal() {
 
-    const [setLoading] = useState(false);
+    // const [setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     // const router = useRouter();
 
