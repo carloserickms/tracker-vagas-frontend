@@ -36,10 +36,12 @@ export default function DefaultNavBar({
                             <DropdownMenuTrigger className="flex justify-center items-center w-full h-full rounded-md gap-1 p-1">
                                 {/* Avatar */}
                                 <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 p-1">
-                                    <Image 
+                                    <Image
                                         src={user.image}
                                         alt={user.name || "User Image"}
                                         className="object-cover w-full h-full rounded-full"
+                                        width={96}
+                                        height={96}
                                     />
                                 </div>
 
