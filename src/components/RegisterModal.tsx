@@ -1,6 +1,5 @@
 'use client'
 
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
@@ -9,13 +8,13 @@ import { FcGoogle } from "react-icons/fc";
 
 export default function RegisterModal() {
 
-    const [loading, setLoading] = useState(false);
+    const [setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     // const router = useRouter();
 
     const handleSubmit = async (providers: string) => {
         // e.preventDefault();
-        setLoading(true);
+        // setLoading(true);
         setError(null);
 
         if (providers === "google") {
@@ -23,7 +22,7 @@ export default function RegisterModal() {
                 redirect: false,
             });
 
-            setLoading(false);
+            // setLoading(false);
         } else {
             alert(error)
         }
